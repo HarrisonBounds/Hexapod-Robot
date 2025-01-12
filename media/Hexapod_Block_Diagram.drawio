@@ -1,0 +1,54 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/133.0" version="26.0.4">
+  <diagram name="Page-1" id="B0Ve1RfujYnxUYxZDSHR">
+    <mxGraphModel dx="1368" dy="790" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="-NcsoE_4tXh5bHa_k3UD-1" value="&lt;div&gt;&lt;b&gt;Controller&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Arduino/Jetson&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="90" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-NcsoE_4tXh5bHa_k3UD-3" value="&lt;div&gt;&lt;b&gt;Locomotion System&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Mechanically designed Base and Legs&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="470" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="-NcsoE_4tXh5bHa_k3UD-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="-NcsoE_4tXh5bHa_k3UD-4" target="-NcsoE_4tXh5bHa_k3UD-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-NcsoE_4tXh5bHa_k3UD-4" value="&lt;div&gt;&lt;b&gt;Servo Controller&lt;/b&gt;&lt;/div&gt;&lt;div&gt;PCA9685/Daisy Chain&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-NcsoE_4tXh5bHa_k3UD-6" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="-NcsoE_4tXh5bHa_k3UD-1" target="-NcsoE_4tXh5bHa_k3UD-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="690" y="500" as="sourcePoint" />
+            <mxPoint x="740" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-NcsoE_4tXh5bHa_k3UD-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="-NcsoE_4tXh5bHa_k3UD-7" target="-NcsoE_4tXh5bHa_k3UD-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-NcsoE_4tXh5bHa_k3UD-7" value="&lt;div&gt;&lt;b&gt;Servos&lt;/b&gt;&lt;/div&gt;&lt;div&gt;MG996R/Dynamixel XL 430&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="350" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-NcsoE_4tXh5bHa_k3UD-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="-NcsoE_4tXh5bHa_k3UD-13" target="-NcsoE_4tXh5bHa_k3UD-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-NcsoE_4tXh5bHa_k3UD-13" value="&lt;div&gt;&lt;b&gt;Power Supply&lt;/b&gt;&lt;/div&gt;&lt;div&gt;5-12V&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="90" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-NcsoE_4tXh5bHa_k3UD-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="-NcsoE_4tXh5bHa_k3UD-14" target="-NcsoE_4tXh5bHa_k3UD-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-NcsoE_4tXh5bHa_k3UD-14" value="&lt;div&gt;&lt;b&gt;Power Supply&lt;/b&gt;&lt;/div&gt;&lt;div&gt;5V&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-NcsoE_4tXh5bHa_k3UD-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="-NcsoE_4tXh5bHa_k3UD-17">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="510" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-NcsoE_4tXh5bHa_k3UD-17" value="&lt;div&gt;&lt;b&gt;Movement and Gait Control&lt;/b&gt;&lt;/div&gt;&lt;div&gt;C++/Platform IO&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="490" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
