@@ -53,6 +53,21 @@ looked like this:
 
 - **M3*8mm Screws (x18):** Attaching servo horn to servo motor
 
+- **M2 * 8 * 3.5 Heat Inserts(x96)**: Attaching the brackets to the physcial parts of the femur and tibia, and attaching the entire leg to the base
+
+
+After getting the leg assembles, I was ready to try to program the dynamixel. I started by cloning the Dynamixel SDK and running their example file "read_write.cpp". Although I should have went through this code before (and ran it on a dynamixel not attached to anything), I went ahead and ran it. It worked! 
+
+Unfortunately, the code had the servo rotating 360 degrees, completely breaking my 3d printed bracket.
+
+Finally I imported that code into my project and edited the Makefile to run it from my personal directory. The dynamixel is moving!!
+
+<video width="640" height="360" controls>
+  <source src="media/Dynamixel_first_test.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+
 
 
 
