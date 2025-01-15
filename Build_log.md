@@ -6,6 +6,10 @@
 
 - Before I got started programming the dynamixels, I wanted to build the CAD model for the first leg. To start with the model, I imported the dynamixel XL-430-250 T as well as the connectors that are also available from the same manufacturer. One connector is to have a joint connection on both sides of the servo for stability, and the other is to easily attach something to the servo such as the base, tibia, or femur.
 
+- Here is a link to the E-manual for the servo I am using in this project
+[Link Text](https://emanual.robotis.com/docs/en/dxl/x/xl430-w250/)
+
+
 <div style="text-align: center;">
     <img src="media/dynamixel_xl_430.jpg" alt="Dynamixel" width="300" height="150">
 
@@ -18,6 +22,7 @@
 </div>
 
 
+### Week 1
 <br>
 
 - Below is a diagram of the joints beloinging to the hexapod, and this is how I will refer to them throughout this log:
@@ -62,10 +67,48 @@ Unfortunately, the code had the servo rotating 360 degrees, completely breaking 
 
 Finally I imported that code into my project and edited the Makefile to run it from my personal directory. The dynamixel is moving!!
 
-<video width="640" height="360" controls>
-  <source src="media/Dynamixel_first_test.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/05079183-e185-4af1-ad81-28d781bba462
+
+### Week 2
+- This week I had several plans to optimze version one of my leg, and to get the servos working:
+
+<br>
+
+- Make the femur shorter
+- Make the tibia longer
+- Put cutouts in both to have a lighted leg
+- Make supports so the cutouts wouldn't be too flimsy
+- Set up the Dynamixel Wizard to change the servo ids
+- Get my servos moving simultaneously 
+
+<br>
+
+I ended up accomplishing all of these goals. Starting with the hardware, my new design looked a lot cooler and more functional. The new femur, tibia, and assembly is below:
+
+<div style="text-align: center;">
+
+<img src="media/femur_v2.png" alt="femur_v2" width="300" height="300">
+
+<img src="media/tibia_v2.png" alt="tibia_v2" width="300" height="300">
+
+</div>
+
+
+<div style="text-align: center;">
+    <img src="media/assembly_v2.png" alt="assembly_v2" width="500" height="400">
+</div>
+
+<br>
+
+- While this was printing, I wanted to test my servos to get them moving at the same time. I used the dynamixel wizard to change each servo unique ids and update all firmware. 
+
+
+- I also edited the read_write code to move multiple servos at once. Once the new leg is printed I can start programming the inverse kinematics for one leg.
+
+
+https://github.com/user-attachments/assets/db0341ab-e282-4abd-b129-530656200c26
+
+
 
 
 
