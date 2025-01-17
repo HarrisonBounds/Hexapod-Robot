@@ -67,7 +67,11 @@ Unfortunately, the code had the servo rotating 360 degrees, completely breaking 
 
 Finally I imported that code into my project and edited the Makefile to run it from my personal directory. The dynamixel is moving!!
 
-https://github.com/user-attachments/assets/05079183-e185-4af1-ad81-28d781bba462
+
+
+https://github.com/user-attachments/assets/1626d32c-aedb-42f3-aecb-51aee07d06fc
+
+
 
 ### Week 2
 - This week I had several plans to optimze version one of my leg, and to get the servos working:
@@ -106,7 +110,7 @@ I ended up accomplishing all of these goals. Starting with the hardware, my new 
 - I also edited the read_write code to move multiple servos at once. Once the new leg is printed I can start programming the inverse kinematics for one leg.
 
 
-https://github.com/user-attachments/assets/db0341ab-e282-4abd-b129-530656200c26
+https://github.com/user-attachments/assets/9b11daee-581e-4daf-9013-fdc824fcda0e
 
 
 
