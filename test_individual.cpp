@@ -162,52 +162,6 @@ int kbhit(void) {
 #endif
 }
 
-//Converts radians to dynamixel range
-void convertRange(double move_amount[])
-{
-  for (int i = 0; i < NUM_DXL; i++)
-  {
-    move_amount[i] = ((move_amount[i]) / (2*PI)) * MAXIMUM_POSITION_LIMIT;
-  }
-}
-
-void IK(int x, int y, int z, double move_amount[])
-{
-  double l1, theta1, theta2, theta3, phi2, phi1;
-  double y_j1;
-
-  z += Z_REST;
-  y_j1 = y += Y_REST_J1;
-  
-  // Joint 1
-  theta1 = atan2(x, y_j1);
-  printf("theta 1: %f\n", theta1);
-
-  l1 = sqrt((Y_REST_J1*Y_REST_J1) + (x*x));
-  
-  //Joint 2 and 3
-  //l1 = sqrt(Z_REST*Z_REST + Y_REST_J2*Y_REST_J2);
-  printf("l1: %f\n", l1);
-
-  //printf("(R2*R2) + (R3*R3) - (l1*l1)) / (2 * R2 * R3): %f\n", (R2*R2) + (R3*R3) - (l1*l1)) / (2 * R2 * R3);
-
-  theta3 = acos(((R2*R2) + (R3*R3) - (l1*l1)) / (2 * R2 * R3));
-  printf("theta3: %f\n", theta3);
-
-  phi2 = acos(((R2*R2) + (l1*l1) - (R3*R3)) / (2 * R2 * l1));
-  printf("phi2: %f\n", phi2);
-
-  phi1 = atan2(Z_REST, Y_REST_J2);
-  printf("phi1: %f\n", phi1);
-
-  theta2 = phi2 + phi1; //there is a reason behind this
-  printf("theta2: %f\n", theta2);
-
-  move_amount[0] = theta1;
-  move_amount[1] = theta2;
-  move_amount[2] = theta3;
-
-}
 
 int main() {
   // Initialize PortHandler instance
@@ -265,91 +219,18 @@ int main() {
     printf("Succeeded enabling DYNAMIXEL Torque.\n");
   }
 
-  double move_amount[3] = {0};
-  // double positions[3] = {0, 0, 0};
+  int label;
+  int move_amount = 200;
+  //Test dynamixel by id
+  printf("Enter the id you want to test: ");
+  scanf("%d", label);
 
-  int x = 0;
-  int y = 0;
-  int z = 50;
-  int goal;
+  dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, label, ADDR_PRESENT_POSITION, (uint32_t*)&dxl_present_position, &dxl_error);
+  dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, label, ADDR_GOAL_POSITION, dxl_present_position+move_amount, &dxl_error);
 
 
-  while(true)
-  {
-    printf("Press any key to continue. (Press [ESC] to exit)\n");
-    if (getch() == ESC_ASCII_VALUE)
-      break;
 
-    for (int i = 0; i < NUM_DXL; i++)
-    {
-      dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, i+1, ADDR_PRESENT_POSITION, (uint32_t*)&dxl_present_position, &dxl_error);      
-      printf("\n\nPresent Position for Joint %d: %03d\n", i+1, dxl_present_position);
-    }
-    
-    
-    IK(x, y, z, move_amount);
-    convertRange(move_amount);
 
-    //Move the servo
-    for (int i = 0; i < NUM_DXL; i++)
-    {
-      goal = 0;
-      dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, i+1, ADDR_PRESENT_POSITION, (uint32_t*)&dxl_present_position, &dxl_error);
-      printf("\n\nPresent Position for Joint %d: %03d\n", i+1, dxl_present_position);
-
-      printf("Amount to Move by for Joint %d: %f\n", i+1, move_amount[i]);
-
-      goal = dxl_present_position + (int)move_amount[i];
-      printf("New Position Joint %d: %d\n", i+1, goal);
-      dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, i+1, ADDR_GOAL_POSITION, goal, &dxl_error);
-    }
-
-    x = -x;
-    y = -y;
-    z = -z;
-
-  }
-
-  // while(1) {
-  //   printf("Press any key to continue. (Press [ESC] to exit)\n");
-  //   if (getch() == ESC_ASCII_VALUE)
-  //     break;
-
-  //   dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, DXL_ID, ADDR_GOAL_POSITION, dxl_goal_position[index], &dxl_error);
-    
-  //   if (dxl_comm_result != COMM_SUCCESS) {
-  //     printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
-  //   }
-  //   else if (dxl_error != 0) {
-  //     printf("%s\n", packetHandler->getRxPacketError(dxl_error));
-  //   }
-
-  //   do {
-  //     // Read the Present Position
-  //     #if defined(XL320)  // XL-320 uses 2 byte Position data
-  //     dxl_comm_result = packetHandler->read2ByteTxRx(portHandler, DXL_ID, ADDR_PRESENT_POSITION, (uint16_t*)&dxl_present_position, &dxl_error);
-  //     #else
-  //     dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, DXL_ID, ADDR_PRESENT_POSITION, (uint32_t*)&dxl_present_position, &dxl_error);
-  //     #endif
-  //     if (dxl_comm_result != COMM_SUCCESS) {
-  //       printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
-  //     }
-  //     else if (dxl_error != 0) {
-  //       printf("%s\n", packetHandler->getRxPacketError(dxl_error));
-  //     }
-
-  //     printf("[ID:%03d] Goal Position:%03d  Present Position:%03d\n", DXL_ID, dxl_goal_position[index], dxl_present_position);
-
-  //   } while((abs(dxl_goal_position[index] - dxl_present_position) > DXL_MOVING_STATUS_THRESHOLD));
-
-  //   // Switch the Goal Position
-  //   if (index == 0) {
-  //     index = 1;
-  //   }
-  //   else {
-  //     index = 0;
-  //   }
-  // }
 
   // Disable DYNAMIXEL Torque
   dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, DXL_ID, ADDR_TORQUE_ENABLE, TORQUE_DISABLE, &dxl_error);
