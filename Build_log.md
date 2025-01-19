@@ -112,6 +112,87 @@ I ended up accomplishing all of these goals. Starting with the hardware, my new 
 
 https://github.com/user-attachments/assets/9b11daee-581e-4daf-9013-fdc824fcda0e
 
+- After making the servos move in sync, I put my new leg together and clamped it on the side of the table so I could start writing the Inverse Kinematic Equations. 
+
+<div style="text-align: center;">
+    <img src="media/hexapod_leg_v2.png" alt="leg_v2" width="500" height="400">
+</div>
+
+- Now it is time to solve some inverse kinematics! I have one joint that rotates on the x-y plane and two joints that rotate on the y-z plane. Lets start with the first joint.
+
+<div style="text-align: center;">
+    <img src="media/ik_hexapod_leg.png" alt="ik" width="400" height="400">
+</div>
+
+1. Find the angle $\theta_1$ by looking at a top down view on the leg (since this joint moves on the x-y plane aka back and forth). Calculating this joint is not so bad since its joint one jont on the plane, meaning we can make use of the angle tan($\theta_1$) = $\frac{opp}{hyp}$ or tan($\theta_1$) = $\frac{x_{offset}}{y_{offset}}$. Rearanging this equation, we have for our first joint: 
+
+<center>
+
+$\theta_1 = \tan^{-1}\left(\frac{x}{y}\right)$
+
+</center>
+
+2. $\theta_3$ is the next easiest to find, as all we need to do is calculate the top angle of the red triangle above. For this we can implement the law of cosines:
+
+<center>
+
+$L^2 = R2^2 + R3^2 - 2R2R3 \cdot \cos(\theta_3)$
+
+Rearranging this to solve for $\theta_3$ we have:
+
+$\theta_3 = \cos^{-1}\left(\frac{R2^2 + R3^2 - L^2}{2R2R3}\right)$
+
+
+</center>
+
+3. Now that we have $\theta_1$ and $\theta_3$, we can solve for $\theta_2$. To get $\theta_2$, we need to first get $\phi_2$ and $\phi_1$. Once we get these values, we can subtract them to getting the reamining angle $\theta_2$.
+
+4. $\phi_2$ - Despite how this looks, this is NOT a right triangle. This means we will one again have to deploy the law of cosines to get our answer. 
+
+<center>
+
+$\phi_2 = \cos^{-1}\left(\frac{R2^2 + L^2 - R3^2}{2R2L}\right)$
+
+</center>
+
+5. $\phi_1$ - Since you can make a rectangle or right angle out of the blue triangle, we can say that $\phi_1$ is equivalent to the interior angle at the end of the blue triangle. With this clever trick in mind, we can solve for $\phi_1$:
+
+<center>
+
+$\phi_1 = \tan^{-1}\left(\frac{z_{offset}}{y_{offset}}\right)$
+
+</center>
+
+6. Finally we can get $\theta_2$! NOTE: Since the z offset is negative, our $\phi_1$ also becomes a negative. To mitigate this, we now will add both $\phi_1$ and $\phi_2$ together to get a postivie angle.
+
+7. Also, for the sake of simplicity I kept L in the equation. But actually, L is just projection of the y offset from the first joint. This means that everywhere we used L in the equation, we need to replace it with the y offset from the first joint to the foot.
+
+And with that, we have the inverse kinematics laid out for our leg! The next step was to test this out in code. I wrote a script for it by editing the original read_write.cpp file, but to no surprise it was more difficult to intergrate all together. While I had a break I decided to start designing the base of my robot. 
+
+I decided to make the base a hexagon (hexapod -> hexagon), which I think makes sense. Since I was know thinking about a base, I needed to have enough room to attach all of my electronics. 
+
+I had the Nvidia Jetson Orin Nano, U2D2 controller, and the yet was to be detemined. What power source should I use? How would I successfully daisy chain all of the servos in a clean way?
+
+I ended up getting this board from Trossen Robotics for the daisy chaining issue. Now keep in mind, I have no idea the amperage limits on this board, much less if it actually works yet. Thats on my to do list. The board is called 6 Port XM/XL Power Hub (3pin). 
+
+<div style="text-align: center;">
+    <img src="media/Trossen_power_hub.png" alt="leg_v2" width="300" height="300">
+</div>
+
+My next issue was the power supply. I needed a power supply for my Jetson (7~20V, 5A). I also needed a power supply for this board above (which I still have no idea if it works yet). According to my servos the operating voltage is 11.1V and the stall current is 1.3 amps. 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
