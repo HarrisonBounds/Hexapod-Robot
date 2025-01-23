@@ -2,8 +2,6 @@
 
 - For this project, I opted to use the dynamixel motors and a Nvidia Jetson Orin Nano to control them. Dynamixel motors can be controlled by daisy chaining, allowing for easy wiring and (hopefully) programming.
 
-<br>
-
 - Before I got started programming the dynamixels, I wanted to build the CAD model for the first leg. To start with the model, I imported the dynamixel XL-430-250 T as well as the connectors that are also available from the same manufacturer. One connector is to have a joint connection on both sides of the servo for stability, and the other is to easily attach something to the servo such as the base, tibia, or femur.
 
 - Here is a link to the E-manual for the servo I am using in this project
@@ -60,14 +58,14 @@ looked like this:
 
 - **M2 * 8 * 3.5 Heat Inserts(x96)**: Attaching the brackets to the physcial parts of the femur and tibia, and attaching the entire leg to the base
 
+<br>
+<br>
 
-After getting the leg assembles, I was ready to try to program the dynamixel. I started by cloning the Dynamixel SDK and running their example file "read_write.cpp". Although I should have went through this code before (and ran it on a dynamixel not attached to anything), I went ahead and ran it. It worked! 
+- After getting the leg assembles, I was ready to try to program the dynamixel. I started by cloning the Dynamixel SDK and running their example file "read_write.cpp". Although I should have went through this code before (and ran it on a dynamixel not attached to anything), I went ahead and ran it. It worked! 
 
-Unfortunately, the code had the servo rotating 360 degrees, completely breaking my 3d printed bracket.
+- Unfortunately, the code had the servo rotating 360 degrees, completely breaking my 3d printed bracket.
 
-Finally I imported that code into my project and edited the Makefile to run it from my personal directory. The dynamixel is moving!!
-
-
+- Finally I imported that code into my project and edited the Makefile to run it from my personal directory. The dynamixel is moving!!
 
 https://github.com/user-attachments/assets/1626d32c-aedb-42f3-aecb-51aee07d06fc
 
@@ -78,16 +76,16 @@ https://github.com/user-attachments/assets/1626d32c-aedb-42f3-aecb-51aee07d06fc
 
 <br>
 
-- Make the femur shorter
-- Make the tibia longer
-- Put cutouts in both to have a lighted leg
-- Make supports so the cutouts wouldn't be too flimsy
-- Set up the Dynamixel Wizard to change the servo ids
-- Get my servos moving simultaneously 
+1. Make the femur shorter
+2. Make the tibia longer
+3. Put cutouts in both to have a lighted leg
+4. Make supports so the cutouts wouldn't be too flimsy
+5. Set up the Dynamixel Wizard to change the servo ids
+6. Get my servos moving simultaneously 
 
 <br>
 
-I ended up accomplishing all of these goals. Starting with the hardware, my new design looked a lot cooler and more functional. The new femur, tibia, and assembly is below:
+- I ended up accomplishing all of these goals. Starting with the hardware, my new design looked a lot cooler and more functional. The new femur, tibia, and assembly is below:
 
 <div style="text-align: center;">
 
@@ -165,24 +163,42 @@ $\phi_1 = \tan^{-1}\left(\frac{z_{offset}}{y_{offset}}\right)$
 
 6. Finally we can get $\theta_2$! NOTE: Since the z offset is negative, our $\phi_1$ also becomes a negative. To mitigate this, we now will add both $\phi_1$ and $\phi_2$ together to get a postivie angle.
 
-7. Also, for the sake of simplicity I kept L in the equation. But actually, L is just projection of the y offset from the first joint. This means that everywhere we used L in the equation, we need to replace it with the y offset from the first joint to the foot.
+7. Also, for the sake of simplicity I kept y<sub>offset</sub> in the equation. But actually, y<sub>offset</sub> is too long. Instead, in the code I calculate the distance between the first joint and the foot, then subtract the length between J1 and J2. This gives me the actual distance.
 
-And with that, we have the inverse kinematics laid out for our leg! The next step was to test this out in code. I wrote a script for it by editing the original read_write.cpp file, but to no surprise it was more difficult to intergrate all together. While I had a break I decided to start designing the base of my robot. 
+8. I struggled for a long time trying to figure out why hte equations weren't working. I was positive that the calculations were correct. Well it turns out these angles expect every joint to be set at a 0 angle. So in the code I first set the leg to its rest position (pass in xyz = 0), and then I calculate a position from there. In the future I will probably set all of my servos to the same joint position, so I can go to the home position easier.
 
-I decided to make the base a hexagon (hexapod -> hexagon), which I think makes sense. Since I was know thinking about a base, I needed to have enough room to attach all of my electronics. 
+<br>
 
-I had the Nvidia Jetson Orin Nano, U2D2 controller, and the yet was to be detemined. What power source should I use? How would I successfully daisy chain all of the servos in a clean way?
+- And with that, we have the inverse kinematics laid out for our leg! The next step was to test this out in code. I wrote a script for it by editing the original read_write.cpp file, but to no surprise it was more difficult to intergrate all together. While I had a break I decided to start designing the base of my robot. 
 
-I ended up getting this board from Trossen Robotics for the daisy chaining issue. Now keep in mind, I have no idea the amperage limits on this board, much less if it actually works yet. Thats on my to do list. The board is called 6 Port XM/XL Power Hub (3pin). 
+- I decided to make the base a hexagon (hexapod -> hexagon), which I think makes sense. Since I was know thinking about a base, I needed to have enough room to attach all of my electronics. 
+
+- I had the Nvidia Jetson Orin Nano, U2D2 controller, and the yet was to be detemined. What power source should I use? How would I successfully daisy chain all of the servos in a clean way?
+
+- I ended up getting this board from Trossen Robotics for the daisy chaining issue. Now keep in mind, I have no idea the amperage limits on this board, much less if it actually works yet. Thats on my to do list. The board is called 6 Port XM/XL Power Hub (3pin). 
 
 <div style="text-align: center;">
     <img src="media/Trossen_power_hub.png" alt="leg_v2" width="300" height="300">
 </div>
 
-My next issue was the power supply. I needed a power supply for my Jetson (7~20V, 5A). I also needed a power supply for this board above (which I still have no idea if it works yet). According to my servos the operating voltage is 11.1V and the stall current is 1.3 amps. 
+- My next issue was the power supply. I needed a power supply for my Jetson (7~20V, 5A). I also needed a power supply for this board above (which I still have no idea if it works yet). According to my servos the operating voltage is 11.1V and the stall current is 1.3 amps. 
 
+<br>
 
+- For now, I wont worry about that, I will just keep my robot tethered to test everything.
 
+### Week 3
+
+- This week I designed the base, and got everything put together like it should. I also got the inverse kinematics working completely for one leg.
+- One issue I have had is telling the leg to move 50mm in the z direction. After moving there, moving it back down -50mm goes further that it was originally. Soon I will experiment giving it smaller waypoints, so hopefully there will be less room for error.
+
+<div style="text-align: center;">
+    <img src="media/complete_hexapod.png" alt="leg_v2" width="500" height="400">
+</div>
+
+- This week my controller came in, so soon I will start trying to read joystick input, so I can eventually control the hexapod with it
+
+- Currently, I am trying to print all of my parts. Each leg takes ~7 hours to print, and the base will most likely take about the same or a little less. After these parts are all printed, I can assemble the robot and do more in depth testing with a more stable connection.
 
 
 
