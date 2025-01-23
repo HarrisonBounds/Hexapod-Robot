@@ -196,6 +196,9 @@ $\phi_1 = \tan^{-1}\left(\frac{z_{offset}}{y_{offset}}\right)$
     <img src="media/complete_hexapod.png" alt="leg_v2" width="500" height="400">
 </div>
 
+https://github.com/user-attachments/assets/047964a4-c2c0-47c0-82e6-51405fc5a215
+
+
 - This week my controller came in, so soon I will start trying to read joystick input, so I can eventually control the hexapod with it
 
 - Currently, I am trying to print all of my parts. Each leg takes ~7 hours to print, and the base will most likely take about the same or a little less. After these parts are all printed, I can assemble the robot and do more in depth testing with a more stable connection.
