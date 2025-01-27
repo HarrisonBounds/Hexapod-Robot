@@ -213,10 +213,9 @@ void IK(double x, double y, double z, double thetaList[])
     thetaList[0] = theta1;
     thetaList[1] = theta2;
     thetaList[2] = theta3;
-
 }
 
-float bezierPoint(float p0, float p1, float p2, float t)
+double bezierPoint(float p0, float p1, float p2, float t)
 {
     return pow(1 - t, 2) * p0 + 2 * (1 - t) * t * p1 + pow(t, 2) * p2;
 }
