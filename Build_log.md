@@ -183,13 +183,12 @@ $\phi_1 = \tan^{-1}\left(\frac{z_{offset}}{y_{offset}}\right)$
 
 - My next issue was the power supply. I needed a power supply for my Jetson (7~20V, 5A). I also needed a power supply for this board above (which I still have no idea if it works yet). According to my servos the operating voltage is 11.1V and the stall current is 1.3 amps. 
 
-<br>
-
 - For now, I wont worry about that, I will just keep my robot tethered to test everything.
 
 ### Week 3
 
 - This week I designed the base, and got everything put together like it should. I also got the inverse kinematics working completely for one leg.
+
 - One issue I have had is telling the leg to move 50mm in the z direction. After moving there, moving it back down -50mm goes further that it was originally. Soon I will experiment giving it smaller waypoints, so hopefully there will be less room for error.
 
 <div style="text-align: center;">
@@ -202,6 +201,16 @@ https://github.com/user-attachments/assets/047964a4-c2c0-47c0-82e6-51405fc5a215
 - This week my controller came in, so soon I will start trying to read joystick input, so I can eventually control the hexapod with it
 
 - Currently, I am trying to print all of my parts. Each leg takes ~7 hours to print, and the base will most likely take about the same or a little less. After these parts are all printed, I can assemble the robot and do more in depth testing with a more stable connection.
+
+### Week 4
+
+- The Inverse Kinematics is finally working completely for one leg! This was my main hiccup that I used all of Week 3 to solve. 
+
+- While putting together my legs via the 3d printed parts, my brackets started to break. This lead me to reinforce these brackets in CAD to make them much stronger and more stable
+
+- The first iteration of my base has been designed, and I will be using acrylic to test it (because laser cutting is much faster than printing). 
+
+- I want to wait to use my controller until I have most of the robot assembled until I start testing joystick input and event controls
 
 
 
