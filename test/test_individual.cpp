@@ -94,8 +94,8 @@
 // https://emanual.robotis.com/docs/en/dxl/protocol2/
 #define PROTOCOL_VERSION  2.0
 
-// Factory default ID of all DYNAMIXEL is 1
-#define DXL_ID  1
+
+const int DXL_IDS[18] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
 
 // Use the actual port assigned to the U2D2.
 // ex) Windows: "COM*", Linux: "/dev/ttyUSB*", Mac: "/dev/tty.usbserial-*"
@@ -115,7 +115,7 @@
 #define R2 127
 #define R3 190
 
-#define NUM_DXL 3
+#define NUM_DXL 18
 
 int getch() {
 #if defined(__linux__) || defined(__APPLE__)
@@ -208,41 +208,52 @@ int main() {
   }
 
   // Enable DYNAMIXEL Torque
-  dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, DXL_ID, ADDR_TORQUE_ENABLE, TORQUE_ENABLE, &dxl_error);
-  if (dxl_comm_result != COMM_SUCCESS) {
-    printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+  for (int i = 0; i < NUM_DXL; i++)
+  {
+    dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, DXL_IDS[i], ADDR_TORQUE_ENABLE, TORQUE_ENABLE, &dxl_error);
+    if (dxl_comm_result != COMM_SUCCESS) {
+      printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+    }
+    else if (dxl_error != 0) {
+      printf("%s\n", packetHandler->getRxPacketError(dxl_error));
+    }
+    else {
+      printf("Succeeded enabling DYNAMIXEL Torque.\n");
+    }
   }
-  else if (dxl_error != 0) {
-    printf("%s\n", packetHandler->getRxPacketError(dxl_error));
-  }
-  else {
-    printf("Succeeded enabling DYNAMIXEL Torque.\n");
+  
+
+  for (int i = 0; i < NUM_DXL; i++)
+  {
+      dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, i + 1, ADDR_PRESENT_POSITION, (uint32_t *)&dxl_present_position, &dxl_error);
+      printf("Joint %d Position at Position (Initial): %d\n", i + 1, dxl_present_position);
   }
 
   int label;
-  int move_amount = 200;
+  int position = 200;
   //Test dynamixel by id
-  printf("Enter the id you want to test: ");
-  scanf("%d", label);
+  printf("Enter the id you want to test and position: ");
+  scanf("%d %d", &label, &position);
 
   dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, label, ADDR_PRESENT_POSITION, (uint32_t*)&dxl_present_position, &dxl_error);
-  dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, label, ADDR_GOAL_POSITION, dxl_present_position+move_amount, &dxl_error);
-
-
-
+  dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, label, ADDR_GOAL_POSITION, position, &dxl_error);
 
 
   // Disable DYNAMIXEL Torque
-  dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, DXL_ID, ADDR_TORQUE_ENABLE, TORQUE_DISABLE, &dxl_error);
-  if (dxl_comm_result != COMM_SUCCESS) {
-    printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+  for (int i = 0; i < NUM_DXL; i++)
+  {
+    dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, DXL_IDS[i], ADDR_TORQUE_ENABLE, TORQUE_DISABLE, &dxl_error);
+    if (dxl_comm_result != COMM_SUCCESS) {
+      printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+    }
+    else if (dxl_error != 0) {
+      printf("%s\n", packetHandler->getRxPacketError(dxl_error));
+    }
+    else {
+      printf("Succeeded disabling DYNAMIXEL Torque.\n");
+    }
   }
-  else if (dxl_error != 0) {
-    printf("%s\n", packetHandler->getRxPacketError(dxl_error));
-  }
-  else {
-    printf("Succeeded disabling DYNAMIXEL Torque.\n");
-  }
+  
 
   // Close port
   portHandler->closePort();
