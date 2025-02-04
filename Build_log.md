@@ -212,6 +212,7 @@ https://github.com/user-attachments/assets/047964a4-c2c0-47c0-82e6-51405fc5a215
 
 - I want to wait to use my controller until I have most of the robot assembled until I start testing joystick input and event controls
 
+https://github.com/user-attachments/assets/4bb8eb8e-8e12-4749-ad72-5f7c3612408d
 
 <div style="text-align: center;">
     <img src="media/servo_bracket_new.png" alt="servo_bracket_new" width="200" height="200">
