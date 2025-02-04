@@ -213,7 +213,22 @@ https://github.com/user-attachments/assets/047964a4-c2c0-47c0-82e6-51405fc5a215
 - I want to wait to use my controller until I have most of the robot assembled until I start testing joystick input and event controls
 
 
+<div style="text-align: center;">
+    <img src="media/servo_bracket_new.png" alt="servo_bracket_new" width="200" height="200">
+    <img src="media/joint_bracket_new.png" alt="joint_bracket_new" width="300" height="200">
+</div>
 
+- My first iteration of my base cut through after several passes on the laser, but I realized it was way to big for my robot. I decided that the next iteration should be smaller, and also circular for ease of design.
+
+<div style="text-align: center;">
+    <img src="media/first_iteration_base.png" alt="first_iteration_base" width="250" height="300">
+</div>
+
+
+
+### Week 5
+
+- 
 
 
 
