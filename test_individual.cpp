@@ -230,13 +230,21 @@ int main() {
   }
 
   int label;
-  int position = 200;
-  //Test dynamixel by id
-  printf("Enter the id you want to test and position: ");
-  scanf("%d %d", &label, &position);
+  int position = 2000;
 
-  dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, label, ADDR_PRESENT_POSITION, (uint32_t*)&dxl_present_position, &dxl_error);
-  dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, label, ADDR_GOAL_POSITION, position, &dxl_error);
+  while(true)
+  {
+    printf("Press any key to continue. (Press [ESC] to exit)\n");
+    if (getch() == ESC_ASCII_VALUE)
+      break;
+    //Test dynamixel by id
+    printf("Enter the id you want to test and position: ");
+    scanf("%d %d", &label, &position);
+
+    dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, label, ADDR_PRESENT_POSITION, (uint32_t*)&dxl_present_position, &dxl_error);
+    dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, label, ADDR_GOAL_POSITION, position, &dxl_error);
+  }
+  
 
 
   // Disable DYNAMIXEL Torque

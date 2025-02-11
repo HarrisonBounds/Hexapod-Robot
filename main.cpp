@@ -67,7 +67,7 @@
 #define PROTOCOL_VERSION 2.0
 
 // Use the actual port assigned to the U2D2.
-// ex) Windows: "COM*", Linux: "/dev/ttyUSB*", Mac: "/dev/tty.usbserial-*"
+// ex Windows: "COM*", Linux: "/dev/ttyUSB*", Mac: "/dev/tty.usbserial-*"
 #define DEVICENAME "/dev/ttyUSB0"
 
 #define TORQUE_ENABLE 1
@@ -75,97 +75,104 @@
 #define DXL_MOVING_STATUS_THRESHOLD 20 // DYNAMIXEL moving status threshold
 #define ESC_ASCII_VALUE 0x1b
 
-#define Y_REST 170
-#define Z_REST -70
+#define Y_REST 100
+#define Z_REST -85
 #define DEGREE_MIN 0
 #define DEGREE_MAX 90
 #define PI 3.14159
-#define R1 50
-#define R2 114
+#define R1 45
+#define R2 75
 #define R3 190
 
-#define NUM_DXL 3
+#define NUM_DXL 18
 
-const int DXL_IDS[NUM_DXL] = {1, 2, 3};
+const int DXL_IDS[NUM_DXL] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
+
+struct Leg
+{
+    int motor_ids[3];
+    double home_positions[3];
+    double move_positions[3];
+};
 
 int getch()
 {
-  struct termios oldt, newt;
-  int ch;
-  tcgetattr(STDIN_FILENO, &oldt);
-  newt = oldt;
-  newt.c_lflag &= ~(ICANON | ECHO);
-  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-  ch = getchar();
-  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-  return ch;
+    struct termios oldt, newt;
+    int ch;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return ch;
 }
 
 int kbhit(void)
 {
-  struct termios oldt, newt;
-  int ch;
-  int oldf;
+    struct termios oldt, newt;
+    int ch;
+    int oldf;
 
-  tcgetattr(STDIN_FILENO, &oldt);
-  newt = oldt;
-  newt.c_lflag &= ~(ICANON | ECHO);
-  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-  oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-  fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
 
-  ch = getchar();
+    ch = getchar();
 
-  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-  fcntl(STDIN_FILENO, F_SETFL, oldf);
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    fcntl(STDIN_FILENO, F_SETFL, oldf);
 
-  if (ch != EOF)
-  {
-      ungetc(ch, stdin);
-      return 1;
-  }
+    if (ch != EOF)
+    {
+        ungetc(ch, stdin);
+        return 1;
+    }
 
-  return 0;
+    return 0;
 }
 
 void IK(double x, double y, double z, double thetaList[])
 {
-  double theta1, theta2, theta3, d, r1, r2, phi1, phi2, phi3;
+    double theta1, theta2, theta3, d, r1, r2, phi1, phi2, phi3;
 
-  y += Y_REST;
-  z += Z_REST;
+    y += Y_REST;
+    z += Z_REST;
 
-  //printf("IK Input: x=%f, y=%f, z=%f\n", x, y, z); // Debug print
+    // printf("IK Input: x=%f, y=%f, z=%f\n", x, y, z); // Debug print
 
-  theta1 = atan2(x, y) * (180 / PI);
+    theta1 = atan2(x, y) * (180 / PI);
 
-  r1 = (sqrt(x * x + y * y)) - R1;
+    r1 = (sqrt(x * x + y * y)) - R1;
 
-  r2 = z;
+    r2 = z;
 
-  d = sqrt(r1 * r1 + r2 * r2);
+    d = sqrt(r1 * r1 + r2 * r2);
 
-  phi1 = (atan2(z, r1)) * (180 / PI);
+    phi1 = (atan2(z, r1)) * (180 / PI);
 
-  //printf("phi1: %lf\n", phi1);
+    // printf("phi1: %lf\n", phi1);
 
-  phi2 = (acos((R2 * R2 + d * d - R3 * R3) / (2 * R2 * d))) * (180 / PI);
+    phi2 = (acos((R2 * R2 + d * d - R3 * R3) / (2 * R2 * d))) * (180 / PI);
 
-  //printf("phi2: %lf\n", phi2);
+    // printf("phi2: %lf\n", phi2);
 
-  theta2 = phi1 + phi2;
+    theta2 = phi1 + phi2;
 
-  phi3 = (acos((R2 * R2 + R3 * R3 - d * d) / (2 * R2 * R3))) * (180 / PI);
+    phi3 = (acos((R2 * R2 + R3 * R3 - d * d) / (2 * R2 * R3))) * (180 / PI);
 
-  //printf("phi3: %lf\n", phi3);
+    // printf("phi3: %lf\n", phi3);
 
-  theta3 = phi3-90;
+    theta3 = phi3 - 90;
 
-  //printf("IK Angles in function (degrees): theta1=%f, theta2=%f, theta3=%f\n", theta1, theta2, theta3); // Debug print
+    printf("IK Angles in function (degrees): theta1=%f, theta2=%f, theta3=%f\n", theta1, theta2, theta3); // Debug print
 
-  thetaList[0] = theta1;
-  thetaList[1] = theta2;
-  thetaList[2] = theta3;
+    thetaList[0] = theta1;
+    thetaList[1] = theta2;
+    thetaList[2] = theta3;
 }
 
 double bezierPoint(float p0, float p1, float p2, float t)
@@ -175,194 +182,212 @@ double bezierPoint(float p0, float p1, float p2, float t)
 
 int main()
 {
-  
-  //Setup, communication
-  dynamixel::PortHandler *portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME);
 
-  dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
+    // Setup, communication
+    dynamixel::PortHandler *portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME);
 
-  int dxl_comm_result = COMM_TX_FAIL; 
+    dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
 
-  uint8_t dxl_error = 0;
+    int dxl_comm_result = COMM_TX_FAIL;
 
-  int32_t dxl_present_position = 0;
+    uint8_t dxl_error = 0;
 
-  //Move  
-  double move_amount[3] = {0};
-  double thetaList[3] = {0};
+    int32_t dxl_present_position = 0;
 
-  int goal;
+    // Move
+    double move_amount[3] = {0};
+    double thetaList[3] = {0};
 
-  int home_positions[NUM_DXL];
+    int goal;
 
-  double p0x = 0, p0z = 0; 
-  double p1x = -75, p1z = 75; 
-  double p2x = -150, p2z = 0;
+    int home_positions[NUM_DXL];
 
+    double p0x = 0, p0z = 0;
+    double p1x = -75, p1z = 75;
+    double p2x = -150, p2z = 0;
 
-  // Open port
-  if (portHandler->openPort())
-  {
-      printf("Succeeded to open the port!\n");
-  }
-  else
-  {
-      printf("Failed to open the port!\n");
-      printf("Press any key to terminate...\n");
-      getch();
-      return 0;
-  }
-
-  // Set port baudrate
-  if (portHandler->setBaudRate(BAUDRATE))
-  {
-      printf("Succeeded to change the baudrate!\n");
-  }
-  else
-  {
-      printf("Failed to change the baudrate!\n");
-      printf("Press any key to terminate...\n");
-      getch();
-      return 0;
-  }
-
-  // Enable DYNAMIXEL Torque
-  for (int i = 0; i < NUM_DXL; i++)
-  {
-      dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, DXL_IDS[i], ADDR_TORQUE_ENABLE, TORQUE_ENABLE, &dxl_error);
-      if (dxl_comm_result != COMM_SUCCESS)
-      {
-          printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
-      }
-      else if (dxl_error != 0)
-      {
-          printf("%s\n", packetHandler->getRxPacketError(dxl_error));
-      }
-      else
-      {
-          printf("Succeeded enabling DYNAMIXEL Torque.\n");
-      }
-  }
-
-  for (int i = 0; i < NUM_DXL; i++)
-  {
-      dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, i + 1, ADDR_PRESENT_POSITION, (uint32_t *)&dxl_present_position, &dxl_error);
-      home_positions[i] = dxl_present_position;
-      //printf("Joint %d Position at Position (Initial): %d\n", i + 1, dxl_present_position);
-  }
-
-  IK(0, 0, 0, thetaList);
-
-  move_amount[0] = ((thetaList[0] / 360) * 4095) + home_positions[0];
-  move_amount[1] = ((thetaList[1] / 360) * 4095) + home_positions[1];
-  move_amount[2] = ((thetaList[2] / 360) * 4095) + home_positions[2]; 
-
-  for (int i = 0; i < NUM_DXL; i++)
-  {
-      goal = (int)move_amount[i];
-      //printf("Home position for Joint %d: %d\n", i + 1, (int)move_amount[i]);
-      dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, DXL_IDS[i], ADDR_GOAL_POSITION, goal, &dxl_error);
-
-      // if (dxl_comm_result != COMM_SUCCESS)
-      // {
-      //     printf("Failed to write goal position for Dynamixel ID %d: %s\n", DXL_IDS[i], packetHandler->getTxRxResult(dxl_comm_result));
-      // }
-      // else if (dxl_error != 0)
-      // {
-      //     printf("Dynamixel ID %d error: %s\n", DXL_IDS[i], packetHandler->getRxPacketError(dxl_error));
-      // }
-      // else
-      // {
-      //     printf("Succeeded writing goal position for Dynamixel ID %d.\n", DXL_IDS[i]);
-      // }
-  }
-
-  //Loop
-  while (true)
-  {
-      printf("Press any key to continue. (Press [ESC] to exit)\n");
-      if (getch() == ESC_ASCII_VALUE)
-          break;
-      
-      //Move along bezier curve
-      for (double dt = 0; dt <= 1; dt += 0.1)
-      {
-        double x = bezierPoint(p0x, p1x, p2x, dt);
-        double z = bezierPoint(p0z, p1z, p2z, dt);
-        // printf("x = %lf\n", x);
-        // printf("z = %lf\n", z);
-        IK(x, 0, z, thetaList);
-
-        // Convert angles to move amounts
-        move_amount[0] = ((thetaList[0] / 360) * 4095) + home_positions[0];
-        move_amount[1] = ((thetaList[1] / 360) * 4095) + home_positions[1];
-        move_amount[2] = ((thetaList[2] / 360) * 4095) + home_positions[2];
-
-
-        for (int i = 0; i < NUM_DXL; i++)
+    const int NUM_LEGS = 6;
+    Leg legs[NUM_LEGS] =
         {
-            //dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, DXL_IDS[i], ADDR_PRESENT_POSITION, (uint32_t *)&dxl_present_position, &dxl_error);
+            {{1, 2, 3}, {0, 0, 0}, {0, 0, 0}},    // Leg 1
+            {{4, 5, 6}, {0, 0, 0}, {0, 0, 0}},    // Leg 2
+            {{7, 8, 9}, {0, 0, 0}, {0, 0, 0}},    // Leg 3
+            {{10, 11, 12}, {0, 0, 0}, {0, 0, 0}}, // Leg 4
+            {{13, 14, 15}, {0, 0, 0}, {0, 0, 0}}, // Leg 5
+            {{16, 17, 18}, {0, 0, 0}, {0, 0, 0}}  // Leg 6
+        };
 
-            //printf("Current position for Joint %d: %d\n", DXL_IDS[i], dxl_present_position);
+    // Open port
+    if (portHandler->openPort())
+    {
+        printf("Succeeded to open the port!\n");
+    }
+    else
+    {
+        printf("Failed to open the port!\n");
+        printf("Press any key to terminate...\n");
+        getch();
+        return 0;
+    }
 
-            //printf("New Position for Joint %d: %d\n", DXL_IDS[i], (int)move_amount[i]);
+    // Set port baudrate
+    if (portHandler->setBaudRate(BAUDRATE))
+    {
+        printf("Succeeded to change the baudrate!\n");
+    }
+    else
+    {
+        printf("Failed to change the baudrate!\n");
+        printf("Press any key to terminate...\n");
+        getch();
+        return 0;
+    }
 
-            goal = (int)move_amount[i];
-
-            dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, DXL_IDS[i], ADDR_GOAL_POSITION, goal, &dxl_error);
-
-        //     if (dxl_comm_result != COMM_SUCCESS)
-        //     {
-        //         printf("Failed to write goal position for Dynamixel ID %d: %s\n", DXL_IDS[i], packetHandler->getTxRxResult(dxl_comm_result));
-        //     }
-        //     else if (dxl_error != 0)
-        //     {
-        //         printf("Dynamixel ID %d error: %s\n", DXL_IDS[i], packetHandler->getRxPacketError(dxl_error));
-        //     }
-        //     else
-        //     {
-        //         printf("Succeeded writing goal position for Dynamixel ID %d.\n", DXL_IDS[i]);
-        //     }
-         }
-      }
-
-      //Move Back to home
-      for (int new_x = p2x; new_x <= 0; new_x+=10)
-      {
-        IK(new_x, 0, 0, thetaList);
-        move_amount[0] = ((thetaList[0] / 360) * 4095) + home_positions[0];
-        move_amount[1] = ((thetaList[1] / 360) * 4095) + home_positions[1];
-        move_amount[2] = ((thetaList[2] / 360) * 4095) + home_positions[2];
-
-        for (int i = 0; i < NUM_DXL; i++)
+    // Enable DYNAMIXEL Torque
+    for (int i = 0; i < NUM_LEGS; i++)
+    {
+        for (int j = 0; j < 3; j++)
         {
-          //printf("New Position for Joint %d: %d\n", DXL_IDS[i], (int)move_amount[i]);
-          goal = (int)move_amount[i];
-          dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, DXL_IDS[i], ADDR_GOAL_POSITION, goal, &dxl_error);
+            dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, legs[i].motor_ids[j], ADDR_TORQUE_ENABLE, TORQUE_ENABLE, &dxl_error);
         }
-      }
-      
-  }
+    }
 
-  // Disable DYNAMIXEL Torque
-  for (int i = 0; i < NUM_DXL; i++)
-  {
-      dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, DXL_IDS[i], ADDR_TORQUE_ENABLE, TORQUE_DISABLE, &dxl_error);
-      if (dxl_comm_result != COMM_SUCCESS)
-      {
-          printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
-      }
-      else if (dxl_error != 0)
-      {
-          printf("%s\n", packetHandler->getRxPacketError(dxl_error));
-      }
-      else
-      {
-          printf("Succeeded disabling DYNAMIXEL Torque.\n");
-      }
-  }
+    while(true)
+    {
+        printf("Press any key to continue. (Press [ESC] to exit)\n");
+        if (getch() == ESC_ASCII_VALUE)
+              break;
+        // Record Current Positions
+        for (int i = 0; i < NUM_LEGS; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, legs[i].motor_ids[j], ADDR_PRESENT_POSITION, (uint32_t *)&dxl_present_position, &dxl_error);
+                legs[i].home_positions[j] = dxl_present_position;
+                printf("Current Position %d: %d\n", legs[i].motor_ids[j], int(legs[i].home_positions[j]));
+            }
+        }
 
-  // Close port
-  portHandler->closePort();
-  return 0;
+        IK(0, 0, 0, thetaList);
+
+        for (int i =0; i < NUM_LEGS; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                legs[i].move_positions[j] = ((thetaList[j] / 360) * 4095) + legs[i].home_positions[j];
+                printf("Goal %d: %d\n", legs[i].motor_ids[j], (int)legs[i].move_positions[j]);
+                //dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, legs[i].motor_ids[j], ADDR_GOAL_POSITION, (int)legs[i].move_positions[j], &dxl_error);
+            }
+        }
+
+    }
+    
+
+    // for (int i = 0; i < NUM_DXL; i++)
+    // {
+        //goal = (int)move_amount[i];
+        
+        // dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, DXL_IDS[i], ADDR_GOAL_POSITION, goal, &dxl_error);
+
+        // if (dxl_comm_result != COMM_SUCCESS)
+        // {
+        //     printf("Failed to write goal position for Dynamixel ID %d: %s\n", DXL_IDS[i], packetHandler->getTxRxResult(dxl_comm_result));
+        // }
+        // else if (dxl_error != 0)
+        // {
+        //     printf("Dynamixel ID %d error: %s\n", DXL_IDS[i], packetHandler->getRxPacketError(dxl_error));
+        // }
+        // else
+        // {
+        //     printf("Succeeded writing goal position for Dynamixel ID %d.\n", DXL_IDS[i]);
+        // }
+   // }
+
+    // Loop
+    //   while (true)
+    //   {
+    //       printf("Press any key to continue. (Press [ESC] to exit)\n");
+    //       if (getch() == ESC_ASCII_VALUE)
+    //           break;
+
+    //       //Move along bezier curve
+    //       for (double dt = 0; dt <= 1; dt += 0.1)
+    //       {
+    //         double x = bezierPoint(p0x, p1x, p2x, dt);
+    //         double z = bezierPoint(p0z, p1z, p2z, dt);
+    //         // printf("x = %lf\n", x);
+    //         // printf("z = %lf\n", z);
+    //         IK(x, 0, z, thetaList);
+
+    //         // Convert angles to move amounts
+    //         move_amount[0] = ((thetaList[0] / 360) * 4095) + home_positions[0];
+    //         move_amount[1] = ((thetaList[1] / 360) * 4095) + home_positions[1];
+    //         move_amount[2] = ((thetaList[2] / 360) * 4095) + home_positions[2];
+
+    //         for (int i = 0; i < NUM_DXL; i++)
+    //         {
+    //             //dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, DXL_IDS[i], ADDR_PRESENT_POSITION, (uint32_t *)&dxl_present_position, &dxl_error);
+
+    //             //printf("Current position for Joint %d: %d\n", DXL_IDS[i], dxl_present_position);
+
+    //             //printf("New Position for Joint %d: %d\n", DXL_IDS[i], (int)move_amount[i]);
+
+    //             goal = (int)move_amount[i];
+
+    //             dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, DXL_IDS[i], ADDR_GOAL_POSITION, goal, &dxl_error);
+
+    //         //     if (dxl_comm_result != COMM_SUCCESS)
+    //         //     {
+    //         //         printf("Failed to write goal position for Dynamixel ID %d: %s\n", DXL_IDS[i], packetHandler->getTxRxResult(dxl_comm_result));
+    //         //     }
+    //         //     else if (dxl_error != 0)
+    //         //     {
+    //         //         printf("Dynamixel ID %d error: %s\n", DXL_IDS[i], packetHandler->getRxPacketError(dxl_error));
+    //         //     }
+    //         //     else
+    //         //     {
+    //         //         printf("Succeeded writing goal position for Dynamixel ID %d.\n", DXL_IDS[i]);
+    //         //     }
+    //          }
+    //       }
+
+    //       //Move Back to home
+    //       for (int new_x = p2x; new_x <= 0; new_x+=10)
+    //       {
+    //         IK(new_x, 0, 0, thetaList);
+    //         move_amount[0] = ((thetaList[0] / 360) * 4095) + home_positions[0];
+    //         move_amount[1] = ((thetaList[1] / 360) * 4095) + home_positions[1];
+    //         move_amount[2] = ((thetaList[2] / 360) * 4095) + home_positions[2];
+
+    //         for (int i = 0; i < NUM_DXL; i++)
+    //         {
+    //           //printf("New Position for Joint %d: %d\n", DXL_IDS[i], (int)move_amount[i]);
+    //           goal = (int)move_amount[i];
+    //           dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, DXL_IDS[i], ADDR_GOAL_POSITION, goal, &dxl_error);
+    //         }
+    //       }
+
+    //   }
+
+    // Disable DYNAMIXEL Torque
+    for (int i = 0; i < NUM_DXL; i++)
+    {
+        dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, DXL_IDS[i], ADDR_TORQUE_ENABLE, TORQUE_DISABLE, &dxl_error);
+        if (dxl_comm_result != COMM_SUCCESS)
+        {
+            printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+        }
+        else if (dxl_error != 0)
+        {
+            printf("%s\n", packetHandler->getRxPacketError(dxl_error));
+        }
+        else
+        {
+            printf("Succeeded disabling DYNAMIXEL Torque.\n");
+        }
+    }
+
+    // Close port
+    portHandler->closePort();
+    return 0;
 }
