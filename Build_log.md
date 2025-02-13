@@ -228,8 +228,39 @@ https://github.com/user-attachments/assets/4bb8eb8e-8e12-4749-ad72-5f7c3612408d
 
 
 ### Week 5
+- I created a wider base to hold all of my electronics, including the jetson and batteries on the top, and the U2D2 Power hubs and voltage regulators on the bottom.
 
-- 
+- I found that this method extends the robot too far out creating additional torque that the motorss need to provide. These week was mainly constructing and printing this base while trying to get it standing. 
+
+<div style="text-align: center;">
+    <img src="media/LargeBase.png" alt="first_iteration_base" width="250" height="300">
+</div>
+
+- I now have several iterations of CAD designs with different componenets. All of these are visible on my CAD page and allows to to go back to a design if I need to. 
+
+- I made the brackets much thicker so they are more sturdy, but the servo brackets still have a thin hole where the screw sits flush to the mount. This connection is not too good, since there is not much material to go in between. Soon I want to print out more of these, as they have become an issue during testing
+
+### Week 6
+
+- With my new base, I got the robot standing, but the feet slide out from under it pretty easily. To mitigate this, I ordered some rubber feet to stick on the bottom of the feet.
+
+- Although the robots stand, the base is still too big. I have designed a new base that is not circular, so that I can put all of my components in line without having to extend the base material in all directions. I believe this will save me some weight. 
+
+- Also to save weight, I bought a new small voltage regualtor that is rated for 20 amps, and a lipo splitter to split the batteries current to both of my power hubs. With the other battery gone, and both of my heavy voltage regualtors off board, this reduces my weight by ~0.75 kg or 1.7 lbs. This is going to be really nice for less torue requirements on the motors
+
+- Although it pained me, I decided to take out the "femur" portion of my leg. Reducing this length helps provide more stability and less torque for the motors. 
+
+- I wanted the robot to go to the standing position from any leg position. I made my code modular, making a Leg structure so I can control each leg with its own values. This has proven more diffcult than I thought, as I haven't necessarily gotten it to fully work yet.
+
+<div style="text-align: center;">
+    <img src="media/Standing.png" alt="first_iteration_base" width="350" height="300">
+</div>
+
+<div style="text-align: center;">
+    <img src="media/Maintenance.png" alt="first_iteration_base" width="350" height="300">
+</div>
+
+
 
 
 
