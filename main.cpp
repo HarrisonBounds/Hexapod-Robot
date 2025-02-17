@@ -41,44 +41,33 @@
 #include <cmath>
 #include <algorithm>
 
-#include "dynamixel_sdk.h" // Uses DYNAMIXEL SDK library
+#include "dynamixel_sdk.h" 
 
-/********* DYNAMIXEL Model definition *********
-***** (Use only one definition at a time) *****/
-#define X_SERIES // X330, X430, X540, 2X430
-// #define PRO_SERIES // H54, H42, M54, M42, L54, L42
-// #define PRO_A_SERIES // PRO series with (A) firmware update.
-// #define P_SERIES  // PH54, PH42, PM54
-// #define XL320  // [WARNING] Operating Voltage : 7.4V
-// #define MX_SERIES // MX series with 2.0 firmware update.
-// #define Y_SERIES // Y70, Y80
+
+#define X_SERIES 
 
 // Control table address
 
 #define ADDR_TORQUE_ENABLE 64
 #define ADDR_GOAL_POSITION 116
 #define ADDR_PRESENT_POSITION 132
-#define MINIMUM_POSITION_LIMIT 0    // Refer to the Minimum Position Limit of product eManual
-#define MAXIMUM_POSITION_LIMIT 4095 // Refer to the Maximum Position Limit of product eManual
 #define BAUDRATE 57600
 
-// DYNAMIXEL Protocol Version (1.0 / 2.0)
-// https://emanual.robotis.com/docs/en/dxl/protocol2/
+
 #define PROTOCOL_VERSION 2.0
 
-// Use the actual port assigned to the U2D2.
-// ex Windows: "COM*", Linux: "/dev/ttyUSB*", Mac: "/dev/tty.usbserial-*"
+
 #define DEVICENAME "/dev/ttyUSB0"
 
 #define TORQUE_ENABLE 1
 #define TORQUE_DISABLE 0
-#define DXL_MOVING_STATUS_THRESHOLD 20 // DYNAMIXEL moving status threshold
+#define DXL_MOVING_STATUS_THRESHOLD 20 
 #define ESC_ASCII_VALUE 0x1b
 
 #define Y_REST 150
 #define Z_REST -90
-#define DEGREE_MIN 0
-#define DEGREE_MAX 90
+#define DEGREE_MAX 360.0
+#define POSITION_MAX 4095.0
 #define PI 3.14159
 #define R1 50
 #define R2 100
@@ -196,6 +185,17 @@ void move(dynamixel::PacketHandler *packetHandler, dynamixel::PortHandler *portH
     }
 }
 
+void calculatePosition(Leg *legs, double thetaList[])
+{
+    for (int i = 0; i < NUM_LEGS; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            legs[i].move_positions[j] = legs[i].home_positions[j] - ((thetaList[j] / DEGREE_MAX) * POSITION_MAX);
+        }
+    }
+}
+
 int main()
 {
 
@@ -270,17 +270,7 @@ int main()
 
     IK(0, 0, 0, thetaList);
 
-    for (int i = 0; i < NUM_LEGS; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, legs[i].motor_ids[j], ADDR_PRESENT_POSITION, (uint32_t *)&dxl_present_position, &dxl_error);
-            printf("Joint %d Current Position: %d\n", legs[i].motor_ids[j], dxl_present_position);
-            legs[i].move_positions[j] = legs[i].home_positions[j] - ((thetaList[j] / 360.0) * 4095.0);
-            printf("Goal %d: %d\n", legs[i].motor_ids[j], (int)legs[i].move_positions[j]);
-            goal = (int)legs[i].move_positions[j];
-        }
-    }
+    calculatePosition(legs, thetaList);
 
     move(packetHandler, portHandler, legs);
 
@@ -310,40 +300,25 @@ int main()
 
             IK(x, 0, z, thetaList);
 
-            for (int i = 0; i < NUM_LEGS; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    legs[i].move_positions[j] = legs[i].home_positions[j] - ((thetaList[j] / 360.0) * 4095.0);
-                    printf("Goal %d: %d\n", legs[i].motor_ids[j], (int)legs[i].move_positions[j]);
+            calculatePosition(legs, thetaList);
 
-                }
-            }
-
-            for(int i = 0; i < NUM_LEGS; i++)
-            {
-                for(int j = 0; j < 3; j++)
-                {
-                    dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, legs[i].motor_ids[j], ADDR_GOAL_POSITION, (int)legs[i].move_positions[j], &dxl_error);
-                }
-            }
+            move(packetHandler, portHandler, legs);
             
         }
 
         //Move back home
         IK(0, 0, 0, thetaList);
 
-        for (int i = 0; i < NUM_LEGS; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                legs[i].move_positions[j] = legs[i].home_positions[j] - ((thetaList[j] / 360.0) * 4095.0);
-                goal = (int)legs[i].move_positions[j];
-            }
-        }
+        calculatePosition(legs, thetaList);
 
         move(packetHandler, portHandler, legs);
     }
+
+    IK(0, -100, 0, thetaList);
+
+    calculatePosition(legs, thetaList);
+
+    move(packetHandler, portHandler, legs);
 
     // Disable DYNAMIXEL Torque
     for (int i = 0; i < NUM_DXL; i++)
