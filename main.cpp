@@ -43,6 +43,8 @@
 
 #include "dynamixel_sdk.h" 
 
+#include <unistd.h>
+
 
 #define X_SERIES 
 
@@ -170,28 +172,46 @@ double bezierPoint(float p0, float p1, float p2, float t)
     return pow(1 - t, 2) * p0 + 2 * (1 - t) * t * p1 + pow(t, 2) * p2;
 }
 
-void move(dynamixel::PacketHandler *packetHandler, dynamixel::PortHandler *portHandler, Leg *legs)
+void move(dynamixel::PacketHandler *packetHandler, dynamixel::PortHandler *portHandler, dynamixel::GroupSyncWrite &groupSyncWrite, Leg *legs, int leg_indices[], int array_len)
 {
-    int dxl_comm_result = COMM_TX_FAIL;
+    //int dxl_comm_result = COMM_TX_FAIL;
     uint8_t dxl_error = 0;
     int32_t dxl_present_position = 0;
 
-    for(int i = 0; i < NUM_LEGS; i++)
+    uint8_t param_goal_position[NUM_DXL];
+    bool dxl_addparam_result;
+
+    groupSyncWrite.clearParam();
+
+    // Add goal positions for all motors in the specified legs
+    for (int i = 0; i < array_len; i++) 
     {
-        for(int j = 0; j < 3; j++)
+        for (int j = 0; j < 3; j++) 
         {
-            dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, legs[i].motor_ids[j], ADDR_GOAL_POSITION, (int)legs[i].move_positions[j], &dxl_error);
+            int goal_position = (int)legs[leg_indices[i]].move_positions[j];
+
+            // Pack the 32-bit goal position into 4 bytes
+            param_goal_position[0] = DXL_LOBYTE(DXL_LOWORD(goal_position));
+            param_goal_position[1] = DXL_HIBYTE(DXL_LOWORD(goal_position));
+            param_goal_position[2] = DXL_LOBYTE(DXL_HIWORD(goal_position));
+            param_goal_position[3] = DXL_HIBYTE(DXL_HIWORD(goal_position));
+
+            // Add the motor to the sync group
+            dxl_addparam_result = groupSyncWrite.addParam(legs[leg_indices[i]].motor_ids[j], param_goal_position);
         }
     }
+
+    int dxl_comm_result = groupSyncWrite.txPacket();
+    groupSyncWrite.clearParam();
 }
 
-void calculatePosition(Leg *legs, double thetaList[])
+void calculatePosition(Leg *legs, double thetaList[], int leg_indices[], int array_len)
 {
-    for (int i = 0; i < NUM_LEGS; i++)
+    for (int i = 0; i < array_len; i++)
     {
         for (int j = 0; j < 3; j++)
         {
-            legs[i].move_positions[j] = legs[i].home_positions[j] - ((thetaList[j] / DEGREE_MAX) * POSITION_MAX);
+            legs[leg_indices[i]].move_positions[j] = legs[leg_indices[i]].home_positions[j] - ((thetaList[j] / DEGREE_MAX) * POSITION_MAX);
         }
     }
 }
@@ -204,6 +224,9 @@ int main()
     dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
     dynamixel::PortHandler *portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME);
 
+    dynamixel::GroupSyncWrite groupSyncWrite(portHandler, packetHandler, ADDR_GOAL_POSITION, 4);
+    
+
     int dxl_comm_result = COMM_TX_FAIL;
 
     uint8_t dxl_error = 0;
@@ -211,16 +234,23 @@ int main()
     int32_t dxl_present_position = 0;
 
     // Move
-    double move_amount[3] = {0};
     double thetaList[3] = {0};
 
     int goal;
 
-    int home_positions[NUM_DXL];
+    //int home_positions[NUM_DXL];
 
-    double p0x = 0, p0z = 0;
-    double p1x = -75, p1z = 75;
-    double p2x = -150, p2z = 0;
+    // double p0x = 0, p0z = 0;
+    // double p1x = -75, p1z = 75;
+    // double p2x = -150, p2z = 0;
+
+    int home_indices[6] = {0, 1, 2, 3, 4, 5};
+    int tripod_indices1[3] = {1, 3, 5};
+    int tripod_indices2[3] = {0, 2, 4};
+
+    int home_indices_length = sizeof(home_indices) / sizeof(home_indices[0]);
+    int tripod_indices_length1 = sizeof(tripod_indices1) / sizeof(tripod_indices1[0]);
+    int tripod_indices_length2 = sizeof(tripod_indices2) / sizeof(tripod_indices2[0]);
 
     Leg legs[NUM_LEGS] =
         {
@@ -267,12 +297,12 @@ int main()
         }
     }
 
-
+    //Move to the Home Position
     IK(0, 0, 0, thetaList);
 
-    calculatePosition(legs, thetaList);
+    calculatePosition(legs, thetaList, home_indices, home_indices_length);
 
-    move(packetHandler, portHandler, legs);
+    move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
 
     while(true)
     {
@@ -284,41 +314,76 @@ int main()
         int x = 0;
         int z = 0; 
         
-        for (double t = 0; t <= 1; t += 0.1)
+        for (double t = 0; t <= 1; t += 0.05)
         {
             x = bezierPoint(0, 50, 150, t);
 
             if (t < 0.5)
             {
-                z += 5;
+                z += 1;
             }
             else
             {
-                z -= 5;
+                z -= 1;
             }
             
 
             IK(x, 0, z, thetaList);
 
-            calculatePosition(legs, thetaList);
+            calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
 
-            move(packetHandler, portHandler, legs);
+            move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices1, tripod_indices_length1);
             
         }
 
         //Move back home
         IK(0, 0, 0, thetaList);
 
-        calculatePosition(legs, thetaList);
+        calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
 
-        move(packetHandler, portHandler, legs);
+        move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices1, tripod_indices_length1);
+
+        usleep(10000);
+
+        for (double t = 0; t <= 1; t += 0.05)
+        {
+            x = bezierPoint(0, 50, 150, t);
+
+            if (t < 0.5)
+            {
+                z += 1;
+            }
+            else
+            {
+                z -= 1;
+            }
+            
+
+            IK(x, 0, z, thetaList);
+
+            calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
+
+            move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices2, tripod_indices_length2);
+            
+        }
+
+        //Move back home
+        IK(0, 0, 0, thetaList);
+
+        calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
+
+        move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices2, tripod_indices_length2);
+
+        usleep(10000);
+
     }
 
+    //Return to sleep mode
     IK(0, -100, 0, thetaList);
 
-    calculatePosition(legs, thetaList);
+    calculatePosition(legs, thetaList, home_indices, home_indices_length);
 
-    move(packetHandler, portHandler, legs);
+    move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
 
     // Disable DYNAMIXEL Torque
     for (int i = 0; i < NUM_DXL; i++)
