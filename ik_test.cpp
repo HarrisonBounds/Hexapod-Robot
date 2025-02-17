@@ -215,6 +215,21 @@ void IK(double x, double y, double z, double thetaList[])
     thetaList[2] = theta3;
 }
 
+void FK(double theta1, double theta2, double theta3) {
+    double x, y, z;
+    // Convert angles from degrees to radians
+    double theta1_rad = theta1 * (PI / 180.0);
+    double theta2_rad = theta2 * (PI / 180.0);
+    double theta3_rad = theta3 * (PI / 180.0);
+
+    // Calculate foot position
+    x = (R1 + R2 * cos(theta2_rad) + R3 * cos(theta2_rad + theta3_rad)) * sin(theta1_rad);
+    y = (R1 + R2 * cos(theta2_rad) + R3 * cos(theta2_rad + theta3_rad)) * cos(theta1_rad);
+    z = R2 * sin(theta2_rad) + R3 * sin(theta2_rad + theta3_rad);
+
+    printf("FK Position: x=%f, y=%f, z=%f\n", x, y, z);
+}
+
 double bezierPoint(float p0, float p1, float p2, float t)
 {
     return pow(1 - t, 2) * p0 + 2 * (1 - t) * t * p1 + pow(t, 2) * p2;
@@ -293,6 +308,7 @@ int main()
     {
         dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, i + 1, ADDR_PRESENT_POSITION, (uint32_t *)&dxl_present_position, &dxl_error);
         home_positions[i] = dxl_present_position;
+        printf("Joint %d Angle: %d\n", i + 1, (int)((dxl_present_position / 4095.0) * 360.0));    
         printf("Joint %d Position at Position (Initial): %d\n", i + 1, dxl_present_position);
     }
 
@@ -300,20 +316,21 @@ int main()
     double thetaList[3] = {0};
 
     double x, y, z;
-
+    double move_angle;
     int goal;
 
     IK(0, 0, 0, thetaList);
 
+
     move_amount[0] = ((thetaList[0] / 360) * 4095) + home_positions[0];
     move_amount[1] = ((thetaList[1] / 360) * 4095) + home_positions[1];
     move_amount[2] = ((thetaList[2] / 360) * 4095) + home_positions[2]; 
-
+    
     for (int i = 0; i < NUM_DXL; i++)
     {
         goal = (int)move_amount[i];
-        printf("Home position for Joint %d: %d\n", i + 1, (int)move_amount[i]);
-        dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, DXL_IDS[i], ADDR_GOAL_POSITION, goal, &dxl_error);
+        printf("Home position for Joint %d: %d\n", i + 1, goal);
+        //dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, DXL_IDS[i], ADDR_GOAL_POSITION, goal, &dxl_error);
 
         if (dxl_comm_result != COMM_SUCCESS)
         {
@@ -343,9 +360,9 @@ int main()
         IK(x, y, z, thetaList);
 
         // Convert angles to move amounts
-        move_amount[0] = ((thetaList[0] / 360) * 4095) + home_positions[0];
-        move_amount[1] = ((thetaList[1] / 360) * 4095) + home_positions[1];
-        move_amount[2] = ((thetaList[2] / 360) * 4095) + home_positions[2];
+        move_amount[0] = ((thetaList[0] / 360) * 4095) - home_positions[0];
+        move_amount[1] = ((thetaList[1] / 360) * 4095) - home_positions[1];
+        move_amount[2] = ((thetaList[2] / 360) * 4095) - home_positions[2];
 
 
         for (int i = 0; i < NUM_DXL; i++)
@@ -358,7 +375,7 @@ int main()
 
             goal = (int)move_amount[i];
 
-            dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, DXL_IDS[i], ADDR_GOAL_POSITION, goal, &dxl_error);
+            //dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, DXL_IDS[i], ADDR_GOAL_POSITION, goal, &dxl_error);
 
             if (dxl_comm_result != COMM_SUCCESS)
             {

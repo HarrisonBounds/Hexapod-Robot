@@ -75,13 +75,13 @@
 #define DXL_MOVING_STATUS_THRESHOLD 20 // DYNAMIXEL moving status threshold
 #define ESC_ASCII_VALUE 0x1b
 
-#define Y_REST 100
-#define Z_REST -85
+#define Y_REST 150
+#define Z_REST -90
 #define DEGREE_MIN 0
 #define DEGREE_MAX 90
 #define PI 3.14159
-#define R1 45
-#define R2 75
+#define R1 50
+#define R2 100
 #define R3 190
 
 #define NUM_DXL 18
@@ -92,7 +92,7 @@ struct Leg
 {
     int motor_ids[3];
     double home_positions[3];
-    double move_positions[3];
+    double move_positions[3]; 
 };
 
 int getch()
@@ -183,10 +183,10 @@ double bezierPoint(float p0, float p1, float p2, float t)
 int main()
 {
 
-    // Setup, communication
-    dynamixel::PortHandler *portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME);
+    dynamixel::PortHandler::getPortHandler(DEVICENAME);
 
     dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
+    dynamixel::PortHandler *portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME);
 
     int dxl_comm_result = COMM_TX_FAIL;
 
@@ -209,12 +209,12 @@ int main()
     const int NUM_LEGS = 6;
     Leg legs[NUM_LEGS] =
         {
-            {{1, 2, 3}, {0, 0, 0}, {0, 0, 0}},    // Leg 1
-            {{4, 5, 6}, {0, 0, 0}, {0, 0, 0}},    // Leg 2
-            {{7, 8, 9}, {0, 0, 0}, {0, 0, 0}},    // Leg 3
-            {{10, 11, 12}, {0, 0, 0}, {0, 0, 0}}, // Leg 4
-            {{13, 14, 15}, {0, 0, 0}, {0, 0, 0}}, // Leg 5
-            {{16, 17, 18}, {0, 0, 0}, {0, 0, 0}}  // Leg 6
+            {{1, 2, 3}, {2015, 2080, 2055}, {0, 0, 0}},    
+            {{4, 5, 6}, {2216, 2067, 2033}, {0, 0, 0}},    
+            {{7, 8, 9}, {2109, 2065, 2003}, {0, 0, 0}},    
+            {{10, 11, 12}, {2106, 2055, 2069}, {0, 0, 0}},  
+            {{13, 14, 15}, {2101, 2046, 2075}, {0, 0, 0}}, 
+            {{16, 17, 18}, {1989, 2043, 2057}, {0, 0, 0}}
         };
 
     // Open port
@@ -257,26 +257,26 @@ int main()
         printf("Press any key to continue. (Press [ESC] to exit)\n");
         if (getch() == ESC_ASCII_VALUE)
               break;
-        // Record Current Positions
+
+        IK(0, 0, 0, thetaList);
+
         for (int i = 0; i < NUM_LEGS; i++)
         {
             for (int j = 0; j < 3; j++)
             {
                 dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, legs[i].motor_ids[j], ADDR_PRESENT_POSITION, (uint32_t *)&dxl_present_position, &dxl_error);
-                legs[i].home_positions[j] = dxl_present_position;
-                printf("Current Position %d: %d\n", legs[i].motor_ids[j], int(legs[i].home_positions[j]));
+                printf("Joint %d Current Position: %d\n", legs[i].motor_ids[j], dxl_present_position);
+                legs[i].move_positions[j] = legs[i].home_positions[j] - ((thetaList[j] / 360.0) * 4095.0);
+                printf("Goal %d: %d\n", legs[i].motor_ids[j], (int)legs[i].move_positions[j]);
+                goal = (int)legs[i].move_positions[j];
             }
         }
 
-        IK(0, 0, 0, thetaList);
-
-        for (int i =0; i < NUM_LEGS; i++)
+        for(int i = 0; i < NUM_LEGS; i++)
         {
-            for (int j = 0; j < 3; j++)
+            for(int j = 0; j < 3; j++)
             {
-                legs[i].move_positions[j] = ((thetaList[j] / 360) * 4095) + legs[i].home_positions[j];
-                printf("Goal %d: %d\n", legs[i].motor_ids[j], (int)legs[i].move_positions[j]);
-                //dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, legs[i].motor_ids[j], ADDR_GOAL_POSITION, (int)legs[i].move_positions[j], &dxl_error);
+                dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, legs[i].motor_ids[j], ADDR_GOAL_POSITION, (int)legs[i].move_positions[j], &dxl_error);
             }
         }
 
