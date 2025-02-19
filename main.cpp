@@ -66,8 +66,8 @@
 #define DXL_MOVING_STATUS_THRESHOLD 20 
 #define ESC_ASCII_VALUE 0x1b
 
-#define Y_REST 150
-#define Z_REST -90
+#define Y_REST 50
+#define Z_REST -110
 #define DEGREE_MAX 360.0
 #define POSITION_MAX 4095.0
 #define PI 3.14159
@@ -247,6 +247,12 @@ int main()
     int home_indices[6] = {0, 1, 2, 3, 4, 5};
     int tripod_indices1[3] = {1, 3, 5};
     int tripod_indices2[3] = {0, 2, 4};
+    int tripod_x = 150;
+    int tripod_y = 0;
+    int x = 0;
+    int z = 0; 
+    int y = 0;
+    
 
     int home_indices_length = sizeof(home_indices) / sizeof(home_indices[0]);
     int tripod_indices_length1 = sizeof(tripod_indices1) / sizeof(tripod_indices1[0]);
@@ -311,21 +317,13 @@ int main()
                 break;
 
         //Gait
-        int x = 0;
-        int z = 0; 
         
-        for (double t = 0; t <= 1; t += 0.05)
+        
+        for (double t = 0; t <= 1; t += 0.02)
         {
-            x = bezierPoint(0, 50, 150, t);
+            x = bezierPoint(0, 75, tripod_x, t);
 
-            if (t < 0.5)
-            {
-                z += 1;
-            }
-            else
-            {
-                z -= 1;
-            }
+            z = bezierPoint(0, 50, 0, t);
             
 
             IK(x, 0, z, thetaList);
@@ -333,57 +331,69 @@ int main()
             calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
 
             move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices1, tripod_indices_length1);
+
+            usleep(10000);
             
         }
 
-        //Move back home
-        IK(0, 0, 0, thetaList);
-
-        calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
-
-        move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices1, tripod_indices_length1);
-
-        usleep(10000);
-
-        for (double t = 0; t <= 1; t += 0.05)
+       //Move back home
+        for (double t = 0; t <= 1; t += 0.02)
         {
-            x = bezierPoint(0, 50, 150, t);
-
-            if (t < 0.5)
-            {
-                z += 1;
-            }
-            else
-            {
-                z -= 1;
-            }
+            x = bezierPoint(tripod_x, tripod_x/2, 0, t);
             
+            IK(x, 0, 0, thetaList);
+
+            calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
+
+            move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices1, tripod_indices_length1);
+
+            usleep(10000);
+        }
+
+        for (double t = 0; t <= 1; t += 0.02)
+        {
+            x = bezierPoint(0, 75, tripod_x, t);
+
+            z = bezierPoint(0, 50, 0, t);
 
             IK(x, 0, z, thetaList);
 
             calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
 
             move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices2, tripod_indices_length2);
+
+            usleep(10000);
             
         }
 
         //Move back home
-        IK(0, 0, 0, thetaList);
+        for (double t = 0; t <= 1; t += 0.02)
+        {
+            x = bezierPoint(tripod_x, tripod_x/2, 0, t);
+            
+            IK(x, 0, 0, thetaList);
 
-        calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
+            calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
 
-        move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices2, tripod_indices_length2);
+            move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices2, tripod_indices_length2);
 
-        usleep(10000);
+            
+        }
 
     }
 
-    //Return to sleep mode
-    IK(0, -100, 0, thetaList);
+    // //Return to sleep mode
+    
+    // IK(0, -50, 0, thetaList);
 
-    calculatePosition(legs, thetaList, home_indices, home_indices_length);
+    // calculatePosition(legs, thetaList, home_indices, home_indices_length);
 
-    move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
+    // move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
+
+    // usleep(10000);
+    
+    
+    
 
     // Disable DYNAMIXEL Torque
     for (int i = 0; i < NUM_DXL; i++)
