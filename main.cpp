@@ -134,8 +134,6 @@ void IK(double x, double y, double z, double thetaList[])
     y += Y_REST;
     z += Z_REST;
 
-    // printf("IK Input: x=%f, y=%f, z=%f\n", x, y, z); // Debug print
-
     theta1 = atan2(x, y) * (180 / PI);
 
     r1 = (sqrt(x * x + y * y)) - R1;
@@ -146,21 +144,15 @@ void IK(double x, double y, double z, double thetaList[])
 
     phi1 = (atan2(z, r1)) * (180 / PI);
 
-    // printf("phi1: %lf\n", phi1);
-
     phi2 = (acos((R2 * R2 + d * d - R3 * R3) / (2 * R2 * d))) * (180 / PI);
-
-    // printf("phi2: %lf\n", phi2);
 
     theta2 = phi1 + phi2;
 
     phi3 = (acos((R2 * R2 + R3 * R3 - d * d) / (2 * R2 * R3))) * (180 / PI);
 
-    // printf("phi3: %lf\n", phi3);
-
     theta3 = phi3 - 90;
 
-    printf("IK Angles in function (degrees): theta1=%f, theta2=%f, theta3=%f\n", theta1, theta2, theta3); // Debug print
+    //printf("IK Angles in function (degrees): theta1=%f, theta2=%f, theta3=%f\n", theta1, theta2, theta3); // Debug print
 
     thetaList[0] = theta1;
     thetaList[1] = theta2;
@@ -238,20 +230,19 @@ int main()
 
     int goal;
 
-    //int home_positions[NUM_DXL];
-
-    // double p0x = 0, p0z = 0;
-    // double p1x = -75, p1z = 75;
-    // double p2x = -150, p2z = 0;
-
     int home_indices[6] = {0, 1, 2, 3, 4, 5};
     int tripod_indices1[3] = {1, 3, 5};
     int tripod_indices2[3] = {0, 2, 4};
-    int tripod_x = 150;
+   
+    int tripod_x = 30;
     int tripod_y = 0;
-    int x = 0;
-    int z = 0; 
-    int y = 0;
+
+    int tripod1_x = 0;
+    int tripod1_z = 0;
+
+    int tripod2_x = 0;
+    int tripod2_z = 0; 
+    int count = 0;
     
 
     int home_indices_length = sizeof(home_indices) / sizeof(home_indices[0]);
@@ -260,12 +251,12 @@ int main()
 
     Leg legs[NUM_LEGS] =
         {
-            {{1, 2, 3}, {2015, 2080, 2055}, {0, 0, 0}},    
-            {{4, 5, 6}, {2216, 2067, 2033}, {0, 0, 0}},    
-            {{7, 8, 9}, {2109, 2065, 2003}, {0, 0, 0}},    
-            {{10, 11, 12}, {2106, 2055, 2069}, {0, 0, 0}},  
-            {{13, 14, 15}, {2101, 2046, 2075}, {0, 0, 0}}, 
-            {{16, 17, 18}, {1989, 2043, 2057}, {0, 0, 0}}
+            {{1, 2, 3}, {2000, 2080, 2055}, {0, 0, 0}},    
+            {{4, 5, 6}, {2100, 2067, 2033}, {0, 0, 0}},    //2216, 2067, 2033
+            {{7, 8, 9}, {2100, 2065, 2003}, {0, 0, 0}},    //2100, 2065, 2003
+            {{10, 11, 12}, {2100, 2055, 2069}, {0, 0, 0}}, //2106, 2055, 2069 
+            {{13, 14, 15}, {2101, 2046, 2075}, {0, 0, 0}}, //2101, 2046, 2075
+            {{16, 17, 18}, {2000, 2043, 2057}, {0, 0, 0}}  //1989, 2043, 2057
         };
 
     // Open port
@@ -317,74 +308,90 @@ int main()
                 break;
 
         //Gait
-        
-        
-        for (double t = 0; t <= 1; t += 0.02)
+        for (double t = 0; t <= 1; t += 0.01)
         {
-            x = bezierPoint(0, 75, tripod_x, t);
-
-            z = bezierPoint(0, 50, 0, t);
-            
-
-            IK(x, 0, z, thetaList);
-
+            tripod1_x = bezierPoint(-tripod_x, tripod_x/2, tripod_x, t);
+            tripod1_z = bezierPoint(0, 30, 0, t);
+            IK(tripod1_x, 0, tripod1_z, thetaList);
             calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
 
-            move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices1, tripod_indices_length1);
+            tripod2_x = bezierPoint(0, -tripod_x/2, -tripod_x, t);
+            IK(tripod2_x, 0, 0, thetaList);
+            calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
+
+            move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
 
             usleep(10000);
             
         }
 
-       //Move back home
-        for (double t = 0; t <= 1; t += 0.02)
+        for (double t = 0; t <= 1; t += 0.01)
         {
-            x = bezierPoint(tripod_x, tripod_x/2, 0, t);
+            tripod1_x = bezierPoint(tripod_x, tripod_x/2, -tripod_x, t);
             
-            IK(x, 0, 0, thetaList);
-
+            IK(tripod1_x, 0, 0, thetaList);
             calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
 
-            move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices1, tripod_indices_length1);
-
-            usleep(10000);
-        }
-
-        for (double t = 0; t <= 1; t += 0.02)
-        {
-            x = bezierPoint(0, 75, tripod_x, t);
-
-            z = bezierPoint(0, 50, 0, t);
-
-            IK(x, 0, z, thetaList);
-
+            tripod2_x = bezierPoint(-tripod_x, tripod_x/2, tripod_x, t);
+            tripod2_z = bezierPoint(0, 30, 0, t);
+            IK(tripod2_x, 0, tripod2_z, thetaList);
             calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
 
-            move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices2, tripod_indices_length2);
+            move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
 
             usleep(10000);
             
         }
 
-        //Move back home
-        for (double t = 0; t <= 1; t += 0.02)
-        {
-            x = bezierPoint(tripod_x, tripod_x/2, 0, t);
+    //    //Move back home
+    //     for (double t = 0; t <= 1; t += 0.02)
+    //     {
+    //         x = bezierPoint(tripod_x, tripod_x/2, 0, t);
             
-            IK(x, 0, 0, thetaList);
+    //         IK(x, 0, 0, thetaList);
 
-            calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
+    //         calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
 
-            move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices2, tripod_indices_length2);
+    //         move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices1, tripod_indices_length1);
+
+    //         usleep(10000);
+    //     }
+
+    //     for (double t = 0; t <= 1; t += 0.02)
+    //     {
+    //         x = bezierPoint(0, 75, tripod_x, t);
+
+    //         z = bezierPoint(0, 50, 0, t);
+
+    //         IK(x, 0, z, thetaList);
+
+    //         calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
+
+    //         move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices2, tripod_indices_length2);
+
+    //         usleep(10000);
+            
+    //     }
+
+    //     //Move back home
+    //     for (double t = 0; t <= 1; t += 0.02)
+    //     {
+    //         x = bezierPoint(tripod_x, tripod_x/2, 0, t);
+            
+    //         IK(x, 0, 0, thetaList);
+
+    //         calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
+
+    //         move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices2, tripod_indices_length2);
 
             
-        }
+        //}
 
     }
 
     // //Return to sleep mode
     
-    // IK(0, -50, 0, thetaList);
+    // IK(0, -30, 30, thetaList);
 
     // calculatePosition(legs, thetaList, home_indices, home_indices_length);
 
