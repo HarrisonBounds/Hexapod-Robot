@@ -1,32 +1,4 @@
-/*******************************************************************************
- * Copyright 2017 ROBOTIS CO., LTD.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *******************************************************************************/
 
-/*******************************************************************************
-************************     Read and Write Example      ***********************
-* Required Environment to run this example :
-*   - Protocol 2.0 supported DYNAMIXEL(X, P, PRO/PRO(A), MX 2.0 series)
-*   - DYNAMIXEL Starter Set (U2D2, U2D2 PHB, 12V SMPS)
-* How to use the example :
-*   - Use proper DYNAMIXEL Model definition from line #44
-*   - Build and Run from proper architecture subdirectory.
-*   - For ARM based SBCs such as Raspberry Pi, use linux_sbc subdirectory to build and run.
-*   - https://emanual.robotis.com/docs/en/software/dynamixel/dynamixel_sdk/overview/
-* Author: Ryu Woon Jung (Leon)
-* Maintainer : Zerom, Will Son
-*******************************************************************************/
 
 #if defined(__linux__) || defined(__APPLE__)
 #include <fcntl.h>
@@ -208,6 +180,11 @@ void calculatePosition(Leg *legs, double thetaList[], int leg_indices[], int arr
     }
 }
 
+void tripodGait()
+{
+    
+}
+
 int main()
 {
 
@@ -231,23 +208,36 @@ int main()
     int goal;
 
     int home_indices[6] = {0, 1, 2, 3, 4, 5};
-    int tripod_indices1[3] = {1, 3, 5};
-    int tripod_indices2[3] = {0, 2, 4};
+
+    int tripod_indices1[3] = {0, 2, 4};
+    int tripod_indices2[3] = {1, 3, 5};
+
+    int tripod_indices1a[1] = {4};
+    int tripod_indices2a[1] = {1};
+
    
     int tripod_x = 30;
     int tripod_y = 0;
 
     int tripod1_x = 0;
     int tripod1_z = 0;
+    int tripod1a_x = 0;
+    int tripod1a_z = 0;
 
     int tripod2_x = 0;
     int tripod2_z = 0; 
-    int count = 0;
+    int tripod2a_x = 0;
+    int tripod2a_z = 0; 
+
+    int start = 0;
     
 
     int home_indices_length = sizeof(home_indices) / sizeof(home_indices[0]);
+
     int tripod_indices_length1 = sizeof(tripod_indices1) / sizeof(tripod_indices1[0]);
     int tripod_indices_length2 = sizeof(tripod_indices2) / sizeof(tripod_indices2[0]);
+    int tripod_indices_length1a = sizeof(tripod_indices1a) / sizeof(tripod_indices1a[0]);
+    int tripod_indices_length2a = sizeof(tripod_indices2a) / sizeof(tripod_indices2a[0]);
 
     Leg legs[NUM_LEGS] =
         {
@@ -307,17 +297,25 @@ int main()
         if (getch() == ESC_ASCII_VALUE)
                 break;
 
-        //Gait
         for (double t = 0; t <= 1; t += 0.01)
         {
-            tripod1_x = bezierPoint(-tripod_x, tripod_x/2, tripod_x, t);
-            tripod1_z = bezierPoint(0, 30, 0, t);
+            tripod1_x = bezierPoint(-start, tripod_x/2, tripod_x, t);
+            tripod1_z = bezierPoint(0, 40, 0, t);
             IK(tripod1_x, 0, tripod1_z, thetaList);
             calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
 
-            tripod2_x = bezierPoint(0, -tripod_x/2, -tripod_x, t);
+            tripod1a_x = bezierPoint(start, tripod_x/2, -tripod_x, t);
+            tripod1a_z = bezierPoint(0, 40, 0, t);
+            IK(tripod1a_x, 0, tripod1a_z, thetaList);
+            calculatePosition(legs, thetaList, tripod_indices1a, tripod_indices_length1a);
+
+            tripod2_x = bezierPoint(-start, tripod_x/2, tripod_x, t);
             IK(tripod2_x, 0, 0, thetaList);
             calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
+
+            tripod2a_x = bezierPoint(start, tripod_x/2, -tripod_x, t);
+            IK(tripod2a_x, 0, 0, thetaList);
+            calculatePosition(legs, thetaList, tripod_indices2a, tripod_indices_length2a);
 
             move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
 
@@ -328,14 +326,22 @@ int main()
         for (double t = 0; t <= 1; t += 0.01)
         {
             tripod1_x = bezierPoint(tripod_x, tripod_x/2, -tripod_x, t);
-            
             IK(tripod1_x, 0, 0, thetaList);
             calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
 
-            tripod2_x = bezierPoint(-tripod_x, tripod_x/2, tripod_x, t);
-            tripod2_z = bezierPoint(0, 30, 0, t);
+            tripod1a_x = bezierPoint(-tripod_x, tripod_x/2, tripod_x, t);
+            IK(tripod1a_x, 0, 0, thetaList);
+            calculatePosition(legs, thetaList, tripod_indices1a, tripod_indices_length1a);
+
+            tripod2_x = bezierPoint(tripod_x, tripod_x/2, -tripod_x, t);
+            tripod2_z = bezierPoint(0, 40, 0, t);
             IK(tripod2_x, 0, tripod2_z, thetaList);
             calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
+
+            tripod2a_x = bezierPoint(-tripod_x, tripod_x/2, tripod_x, t);
+            tripod2a_z = bezierPoint(0, 40, 0, t);
+            IK(tripod2a_x, 0, tripod2a_z, thetaList);
+            calculatePosition(legs, thetaList, tripod_indices2a, tripod_indices_length2a);
 
             move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
 
@@ -343,64 +349,49 @@ int main()
             
         }
 
-    //    //Move back home
-    //     for (double t = 0; t <= 1; t += 0.02)
-    //     {
-    //         x = bezierPoint(tripod_x, tripod_x/2, 0, t);
-            
-    //         IK(x, 0, 0, thetaList);
-
-    //         calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
-
-    //         move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices1, tripod_indices_length1);
-
-    //         usleep(10000);
-    //     }
-
-    //     for (double t = 0; t <= 1; t += 0.02)
-    //     {
-    //         x = bezierPoint(0, 75, tripod_x, t);
-
-    //         z = bezierPoint(0, 50, 0, t);
-
-    //         IK(x, 0, z, thetaList);
-
-    //         calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
-
-    //         move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices2, tripod_indices_length2);
-
-    //         usleep(10000);
-            
-    //     }
-
-    //     //Move back home
-    //     for (double t = 0; t <= 1; t += 0.02)
-    //     {
-    //         x = bezierPoint(tripod_x, tripod_x/2, 0, t);
-            
-    //         IK(x, 0, 0, thetaList);
-
-    //         calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
-
-    //         move(packetHandler, portHandler, groupSyncWrite, legs, tripod_indices2, tripod_indices_length2);
-
-            
-        //}
+        start = tripod_x;
 
     }
-
-    // //Return to sleep mode
-    
-    // IK(0, -30, 30, thetaList);
-
-    // calculatePosition(legs, thetaList, home_indices, home_indices_length);
-
-    // move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
-
-    // usleep(10000);
     
     
     
+    // //TURNING
+    // for (double t = 0; t <= 1; t += 0.01)
+    // {
+    //     tripod1_x = bezierPoint(start, tripod_x/2, -tripod_x, t);
+    //     tripod1_z = bezierPoint(0, 30, 0, t);
+    //     IK(tripod1_x, 0, tripod1_z, thetaList);
+    //     calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
+
+    //     tripod2_x = bezierPoint(-start, tripod_x/2, tripod_x, t);
+    //     IK(tripod2_x, 0, 0, thetaList);
+    //     calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
+
+    //     move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
+
+    //     usleep(10000);
+        
+    // }
+
+    // for (double t = 0; t <= 1; t += 0.01)
+    // {
+    //     tripod1_x = bezierPoint(-tripod_x, tripod_x/2, tripod_x, t);
+        
+    //     IK(tripod1_x, 0, 0, thetaList);
+    //     calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
+
+    //     tripod2_x = bezierPoint(tripod_x, tripod_x/2, -tripod_x, t);
+    //     tripod2_z = bezierPoint(0, 30, 0, t);
+    //     IK(tripod2_x, 0, tripod2_z, thetaList);
+    //     calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
+
+    //     move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
+
+    //     usleep(10000);
+        
+    // }
+
+    // start = tripod_x;
 
     // Disable DYNAMIXEL Torque
     for (int i = 0; i < NUM_DXL; i++)
