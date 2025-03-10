@@ -1,0 +1,7 @@
+{
+    "url": "https://cad.onshape.com/documents/2311ffd79aa6c26e8c566e59/w/5ecc59089fcfd42a0c58ebf8/e/2f7cd58c498d1dbad1e98fbd",
+    "output_format": "urdf",
+    "assembly_name": "test_assembly_urdf",
+    "add_dummy_base_link": true
+}
+

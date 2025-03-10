@@ -1,0 +1,1229 @@
+<?xml version="1.0" ?>
+<!-- Generated using onshape-to-robot -->
+<!-- OnShape https://cad.onshape.com/documents/2311ffd79aa6c26e8c566e59/w/5ecc59089fcfd42a0c58ebf8/e/2f7cd58c498d1dbad1e98fbd -->
+<robot name="urdf">
+    <!-- Link base_link -->
+    <link name="base_link">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0"/>
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+        </inertial>
+    </link>
+    <!-- Link base_assembly -->
+    <link name="base_assembly">
+        <inertial>
+            <origin xyz="0.000265282 0.00633191 0.0073901" rpy="0 0 0"/>
+            <mass value="0.890914"/>
+            <inertia ixx="0.00543286" ixy="1.502e-07" ixz="-2.03288e-20" iyy="0.00544627" iyz="1.21481e-05" izz="0.0106306"/>
+        </inertial>
+        <!-- Part parta -->
+        <visual>
+            <origin xyz="0.000265282 0.00538834 -0.010561" rpy="0 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/parta.stl"/>
+            </geometry>
+            <material name="parta_material">
+                <color rgba="0.615686 0.811765 0.929412 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.000265282 0.00538834 -0.010561" rpy="0 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/parta.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part dc11_a01_dummy -->
+        <visual>
+            <origin xyz="0.0867913 0.114345 0.013439" rpy="3.14159 -0 2.355"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.0867913 0.114345 0.013439" rpy="3.14159 -0 2.355"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part dc11_a01_dummy_2 -->
+        <visual>
+            <origin xyz="-0.0862607 0.114345 0.013439" rpy="3.14159 -0 -2.355"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_2_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="-0.0862607 0.114345 0.013439" rpy="3.14159 -0 -2.355"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part dc11_a01_dummy_3 -->
+        <visual>
+            <origin xyz="-0.106519 0.00538834 0.013439" rpy="3.14159 -0 -1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_3_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="-0.106519 0.00538834 0.013439" rpy="3.14159 -0 -1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part dc11_a01_dummy_4 -->
+        <visual>
+            <origin xyz="0.10705 0.00538834 0.013439" rpy="3.14159 -0 1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_4_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.10705 0.00538834 0.013439" rpy="3.14159 -0 1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part dc11_a01_dummy_5 -->
+        <visual>
+            <origin xyz="-0.0862607 -0.103568 0.013439" rpy="3.14159 -0 -0.786593"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_5_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="-0.0862607 -0.103568 0.013439" rpy="3.14159 -0 -0.786593"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part dc11_a01_dummy_6 -->
+        <visual>
+            <origin xyz="0.0867913 -0.103568 0.013439" rpy="3.14159 -0 0.786593"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_6_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.0867913 -0.103568 0.013439" rpy="3.14159 -0 0.786593"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Link double_bracket_assembly -->
+    <link name="double_bracket_assembly">
+        <inertial>
+            <origin xyz="0.028 1.20994e-08 0.019" rpy="0 0 0"/>
+            <mass value="0.0246869"/>
+            <inertia ixx="9.32829e-06" ixy="-5.03238e-12" ixz="-5.03238e-12" iyy="8.77841e-06" iyz="7.40111e-15" izz="8.77841e-06"/>
+        </inertial>
+        <!-- Part fr12_h101 -->
+        <visual>
+            <origin xyz="0.056 -1.21431e-17 0.019" rpy="0 -0 1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.056 -1.21431e-17 0.019" rpy="0 -0 1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_h101_2 -->
+        <visual>
+            <origin xyz="2.77556e-17 1.73472e-18 0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_2_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="2.77556e-17 1.73472e-18 0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Link femur_assembly -->
+    <link name="femur_assembly">
+        <inertial>
+            <origin xyz="-7.54726e-06 -0.0176085 -0.0180586" rpy="0 0 0"/>
+            <mass value="0.13198"/>
+            <inertia ixx="5.98948e-05" ixy="1.75405e-08" ixz="1.43469e-08" iyy="2.44197e-05" iyz="-1.39313e-06" izz="5.20149e-05"/>
+        </inertial>
+        <!-- Part dc11_a01_dummy_7 -->
+        <visual>
+            <origin xyz="-1.73472e-18 0 -0.019" rpy="-5.55112e-17 4.93038e-32 3.9443e-31"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_7_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="-1.73472e-18 0 -0.019" rpy="-5.55112e-17 4.93038e-32 3.9443e-31"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_s102 -->
+        <visual>
+            <origin xyz="1.38778e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+            <material name="fr12_s102_material">
+                <color rgba="0.231373 0.380392 0.705882 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="1.38778e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_h101_3 -->
+        <visual>
+            <origin xyz="-1.21431e-16 -0.0715 -0.019" rpy="-6.56411e-19 -1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_3_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="-1.21431e-16 -0.0715 -0.019" rpy="-6.56411e-19 -1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Link tibia_assembly -->
+    <link name="tibia_assembly">
+        <inertial>
+            <origin xyz="-0.0167995 -0.0405638 -0.0184092" rpy="0 0 0"/>
+            <mass value="0.209114"/>
+            <inertia ixx="0.000285113" ixy="-0.000196192" ixz="-2.14462e-06" iyy="0.000286962" iyz="-4.27064e-06" izz="0.000528405"/>
+        </inertial>
+        <!-- Part part_1 -->
+        <visual>
+            <origin xyz="0.00565724 0.128232 -0.00920154" rpy="-1.66533e-15 -0 2.77336e-17"/>
+            <geometry>
+                <mesh filename="package://assets/part_1.stl"/>
+            </geometry>
+            <material name="part_1_material">
+                <color rgba="0.301961 0.301961 0.301961 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.00565724 0.128232 -0.00920154" rpy="-1.66533e-15 -0 2.77336e-17"/>
+            <geometry>
+                <mesh filename="package://assets/part_1.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part dc11_a01_dummy_8 -->
+        <visual>
+            <origin xyz="0 0 -0.019" rpy="-1.60488e-31 9.86076e-32 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_8_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 -0.019" rpy="-1.60488e-31 9.86076e-32 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_s102_2 -->
+        <visual>
+            <origin xyz="9.88792e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+            <material name="fr12_s102_2_material">
+                <color rgba="0.231373 0.380392 0.705882 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="9.88792e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Joint from femur_assembly to tibia_assembly -->
+    <joint name="leg1_tibia" type="revolute">
+        <origin xyz="-1.26635e-16 -0.0715 1.07553e-16" rpy="7.21645e-16 -3.83614e-17 3.60514e-17"/>
+        <parent link="femur_assembly"/>
+        <child link="tibia_assembly"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+    </joint>
+    <!-- Joint from double_bracket_assembly to femur_assembly -->
+    <joint name="leg1_femur" type="revolute">
+        <origin xyz="0.056 -0.019 0.019" rpy="1.5708 -1.5708 0"/>
+        <parent link="double_bracket_assembly"/>
+        <child link="femur_assembly"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+    </joint>
+    <!-- Joint from base_assembly to double_bracket_assembly -->
+    <joint name="leg1_coxa" type="revolute">
+        <origin xyz="0.0867913 -0.103568 -0.00556095" rpy="0 -0 -0.784204"/>
+        <parent link="base_assembly"/>
+        <child link="double_bracket_assembly"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.0472" upper="1.0472"/>
+    </joint>
+    <!-- Link double_bracket_assembly_2 -->
+    <link name="double_bracket_assembly_2">
+        <inertial>
+            <origin xyz="0.028 1.20994e-08 0.019" rpy="0 0 0"/>
+            <mass value="0.0246869"/>
+            <inertia ixx="9.32829e-06" ixy="-5.03238e-12" ixz="-5.03238e-12" iyy="8.77841e-06" iyz="7.40111e-15" izz="8.77841e-06"/>
+        </inertial>
+        <!-- Part fr12_h101_4 -->
+        <visual>
+            <origin xyz="0.056 4.16334e-17 0.019" rpy="0 -0 1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_4_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.056 4.16334e-17 0.019" rpy="0 -0 1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_h101_5 -->
+        <visual>
+            <origin xyz="0 0 0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_5_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Link femur_assembly_2 -->
+    <link name="femur_assembly_2">
+        <inertial>
+            <origin xyz="-7.54726e-06 -0.0176085 -0.0180586" rpy="0 0 0"/>
+            <mass value="0.13198"/>
+            <inertia ixx="5.98948e-05" ixy="1.75405e-08" ixz="1.43469e-08" iyy="2.44197e-05" iyz="-1.39313e-06" izz="5.20149e-05"/>
+        </inertial>
+        <!-- Part dc11_a01_dummy_9 -->
+        <visual>
+            <origin xyz="0 0 -0.019" rpy="0 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_9_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 -0.019" rpy="0 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_s102_3 -->
+        <visual>
+            <origin xyz="-2.77556e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+            <material name="fr12_s102_3_material">
+                <color rgba="0.231373 0.380392 0.705882 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="-2.77556e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_h101_6 -->
+        <visual>
+            <origin xyz="-2.77556e-17 -0.0715 -0.019" rpy="-0 -1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_6_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="-2.77556e-17 -0.0715 -0.019" rpy="-0 -1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Link tibia_assembly_2 -->
+    <link name="tibia_assembly_2">
+        <inertial>
+            <origin xyz="-0.0167995 -0.0405638 -0.0184092" rpy="0 0 0"/>
+            <mass value="0.209114"/>
+            <inertia ixx="0.000285113" ixy="-0.000196192" ixz="-2.14462e-06" iyy="0.000286962" iyz="-4.27064e-06" izz="0.000528405"/>
+        </inertial>
+        <!-- Part part_1_2 -->
+        <visual>
+            <origin xyz="0.00565724 0.128232 -0.00920154" rpy="-1.91334e-17 -0 2.77336e-17"/>
+            <geometry>
+                <mesh filename="package://assets/part_1.stl"/>
+            </geometry>
+            <material name="part_1_2_material">
+                <color rgba="0.301961 0.301961 0.301961 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.00565724 0.128232 -0.00920154" rpy="-1.91334e-17 -0 2.77336e-17"/>
+            <geometry>
+                <mesh filename="package://assets/part_1.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part dc11_a01_dummy_10 -->
+        <visual>
+            <origin xyz="0 0 -0.019" rpy="0 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_10_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 -0.019" rpy="0 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_s102_4 -->
+        <visual>
+            <origin xyz="0 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+            <material name="fr12_s102_4_material">
+                <color rgba="0.231373 0.380392 0.705882 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Joint from femur_assembly_2 to tibia_assembly_2 -->
+    <joint name="leg2_tibia" type="revolute">
+        <origin xyz="-2.77556e-17 -0.0715 -1.38778e-17" rpy="0 -0 0"/>
+        <parent link="femur_assembly_2"/>
+        <child link="tibia_assembly_2"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+    </joint>
+    <!-- Joint from double_bracket_assembly_2 to femur_assembly_2 -->
+    <joint name="leg2_femur" type="revolute">
+        <origin xyz="0.056 -0.019 0.019" rpy="1.5708 -1.5708 0"/>
+        <parent link="double_bracket_assembly_2"/>
+        <child link="femur_assembly_2"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+    </joint>
+    <!-- Joint from base_assembly to double_bracket_assembly_2 -->
+    <joint name="leg2_coxa" type="revolute">
+        <origin xyz="0.10705 0.00538834 -0.00556095" rpy="0 -0 0"/>
+        <parent link="base_assembly"/>
+        <child link="double_bracket_assembly_2"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.0472" upper="1.0472"/>
+    </joint>
+    <!-- Link double_bracket_assembly_3 -->
+    <link name="double_bracket_assembly_3">
+        <inertial>
+            <origin xyz="0.028 1.20994e-08 0.019" rpy="0 0 0"/>
+            <mass value="0.0246869"/>
+            <inertia ixx="9.32829e-06" ixy="-5.03238e-12" ixz="-5.03238e-12" iyy="8.77841e-06" iyz="7.40111e-15" izz="8.77841e-06"/>
+        </inertial>
+        <!-- Part fr12_h101_7 -->
+        <visual>
+            <origin xyz="0.056 -2.08167e-17 0.019" rpy="0 -0 1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_7_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.056 -2.08167e-17 0.019" rpy="0 -0 1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_h101_8 -->
+        <visual>
+            <origin xyz="0 -6.93889e-18 0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_8_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 -6.93889e-18 0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Link femur_assembly_3 -->
+    <link name="femur_assembly_3">
+        <inertial>
+            <origin xyz="-7.54726e-06 -0.0176085 -0.0180586" rpy="0 0 0"/>
+            <mass value="0.13198"/>
+            <inertia ixx="5.98948e-05" ixy="1.75405e-08" ixz="1.43469e-08" iyy="2.44197e-05" iyz="-1.39313e-06" izz="5.20149e-05"/>
+        </inertial>
+        <!-- Part dc11_a01_dummy_11 -->
+        <visual>
+            <origin xyz="0 0 -0.019" rpy="5.55112e-17 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_11_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 -0.019" rpy="5.55112e-17 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_s102_5 -->
+        <visual>
+            <origin xyz="-8.32667e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+            <material name="fr12_s102_5_material">
+                <color rgba="0.231373 0.380392 0.705882 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="-8.32667e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_h101_9 -->
+        <visual>
+            <origin xyz="-8.32667e-17 -0.0715 -0.019" rpy="3.92054e-17 -1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_9_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="-8.32667e-17 -0.0715 -0.019" rpy="3.92054e-17 -1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Link tibia_assembly_3 -->
+    <link name="tibia_assembly_3">
+        <inertial>
+            <origin xyz="-0.0167995 -0.0405638 -0.0184092" rpy="0 0 0"/>
+            <mass value="0.209114"/>
+            <inertia ixx="0.000285113" ixy="-0.000196192" ixz="-2.14462e-06" iyy="0.000286962" iyz="-4.27064e-06" izz="0.000528405"/>
+        </inertial>
+        <!-- Part part_1_3 -->
+        <visual>
+            <origin xyz="0.00565724 0.128232 -0.00920154" rpy="-8.32667e-16 2.46519e-32 2.77336e-17"/>
+            <geometry>
+                <mesh filename="package://assets/part_1.stl"/>
+            </geometry>
+            <material name="part_1_3_material">
+                <color rgba="0.301961 0.301961 0.301961 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.00565724 0.128232 -0.00920154" rpy="-8.32667e-16 2.46519e-32 2.77336e-17"/>
+            <geometry>
+                <mesh filename="package://assets/part_1.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part dc11_a01_dummy_12 -->
+        <visual>
+            <origin xyz="0 5.55112e-17 -0.019" rpy="-1.11022e-16 2.46519e-32 -4.93038e-32"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_12_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 5.55112e-17 -0.019" rpy="-1.11022e-16 2.46519e-32 -4.93038e-32"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_s102_6 -->
+        <visual>
+            <origin xyz="3.46945e-18 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+            <material name="fr12_s102_6_material">
+                <color rgba="0.231373 0.380392 0.705882 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="3.46945e-18 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Joint from femur_assembly_3 to tibia_assembly_3 -->
+    <joint name="leg3_tibia" type="revolute">
+        <origin xyz="-2.60209e-17 -0.0715 9.32414e-17" rpy="3.88578e-16 -1.96402e-16 2.35232e-16"/>
+        <parent link="femur_assembly_3"/>
+        <child link="tibia_assembly_3"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+    </joint>
+    <!-- Joint from double_bracket_assembly_3 to femur_assembly_3 -->
+    <joint name="leg3_femur" type="revolute">
+        <origin xyz="0.056 -0.019 0.019" rpy="1.5708 -1.5708 0"/>
+        <parent link="double_bracket_assembly_3"/>
+        <child link="femur_assembly_3"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+    </joint>
+    <!-- Joint from base_assembly to double_bracket_assembly_3 -->
+    <joint name="leg3_coxa" type="revolute">
+        <origin xyz="0.0867913 0.114345 -0.00556095" rpy="0 -0 0.784204"/>
+        <parent link="base_assembly"/>
+        <child link="double_bracket_assembly_3"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.0472" upper="1.0472"/>
+    </joint>
+    <!-- Link double_bracket_assembly_4 -->
+    <link name="double_bracket_assembly_4">
+        <inertial>
+            <origin xyz="0.028 1.20994e-08 0.019" rpy="0 0 0"/>
+            <mass value="0.0246869"/>
+            <inertia ixx="9.32829e-06" ixy="-5.03238e-12" ixz="-5.03238e-12" iyy="8.77841e-06" iyz="7.40111e-15" izz="8.77841e-06"/>
+        </inertial>
+        <!-- Part fr12_h101_10 -->
+        <visual>
+            <origin xyz="0.056 -5.89806e-17 0.019" rpy="0 -0 1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_10_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.056 -5.89806e-17 0.019" rpy="0 -0 1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_h101_11 -->
+        <visual>
+            <origin xyz="-2.77556e-17 1.04083e-17 0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_11_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="-2.77556e-17 1.04083e-17 0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Link femur_assembly_4 -->
+    <link name="femur_assembly_4">
+        <inertial>
+            <origin xyz="-7.54726e-06 -0.0176085 -0.0180586" rpy="0 0 0"/>
+            <mass value="0.13198"/>
+            <inertia ixx="5.98948e-05" ixy="1.75405e-08" ixz="1.43469e-08" iyy="2.44197e-05" iyz="-1.39313e-06" izz="5.20149e-05"/>
+        </inertial>
+        <!-- Part dc11_a01_dummy_13 -->
+        <visual>
+            <origin xyz="0 0 -0.019" rpy="7.36161e-36 4.0926e-34 -1.2326e-32"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_13_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 -0.019" rpy="7.36161e-36 4.0926e-34 -1.2326e-32"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_s102_7 -->
+        <visual>
+            <origin xyz="2.60209e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+            <material name="fr12_s102_7_material">
+                <color rgba="0.231373 0.380392 0.705882 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="2.60209e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_h101_12 -->
+        <visual>
+            <origin xyz="8.67362e-18 -0.0715 -0.019" rpy="-7.82232e-17 -1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_12_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="8.67362e-18 -0.0715 -0.019" rpy="-7.82232e-17 -1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Link tibia_assembly_4 -->
+    <link name="tibia_assembly_4">
+        <inertial>
+            <origin xyz="-0.0167995 -0.0405638 -0.0184092" rpy="0 0 0"/>
+            <mass value="0.209114"/>
+            <inertia ixx="0.000285113" ixy="-0.000196192" ixz="-2.14462e-06" iyy="0.000286962" iyz="-4.27064e-06" izz="0.000528405"/>
+        </inertial>
+        <!-- Part part_1_4 -->
+        <visual>
+            <origin xyz="0.00565724 0.128232 -0.00920154" rpy="-4.44089e-16 -0 2.77336e-17"/>
+            <geometry>
+                <mesh filename="package://assets/part_1.stl"/>
+            </geometry>
+            <material name="part_1_4_material">
+                <color rgba="0.301961 0.301961 0.301961 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.00565724 0.128232 -0.00920154" rpy="-4.44089e-16 -0 2.77336e-17"/>
+            <geometry>
+                <mesh filename="package://assets/part_1.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part dc11_a01_dummy_14 -->
+        <visual>
+            <origin xyz="1.73472e-18 0 -0.019" rpy="6.26079e-32 4.93038e-32 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_14_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="1.73472e-18 0 -0.019" rpy="6.26079e-32 4.93038e-32 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_s102_8 -->
+        <visual>
+            <origin xyz="2.60209e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+            <material name="fr12_s102_8_material">
+                <color rgba="0.231373 0.380392 0.705882 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="2.60209e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Joint from femur_assembly_4 to tibia_assembly_4 -->
+    <joint name="leg4_tibia" type="revolute">
+        <origin xyz="1.73472e-18 -0.0715 -2.08167e-17" rpy="1.66533e-16 3.55515e-16 -6.86052e-17"/>
+        <parent link="femur_assembly_4"/>
+        <child link="tibia_assembly_4"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+    </joint>
+    <!-- Joint from double_bracket_assembly_4 to femur_assembly_4 -->
+    <joint name="leg4_femur" type="revolute">
+        <origin xyz="0.056 -0.019 0.019" rpy="1.5708 -1.5708 0"/>
+        <parent link="double_bracket_assembly_4"/>
+        <child link="femur_assembly_4"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+    </joint>
+    <!-- Joint from base_assembly to double_bracket_assembly_4 -->
+    <joint name="leg4_coxa" type="revolute">
+        <origin xyz="-0.0862607 0.114345 -0.00556095" rpy="0 -0 2.35739"/>
+        <parent link="base_assembly"/>
+        <child link="double_bracket_assembly_4"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.0472" upper="1.0472"/>
+    </joint>
+    <!-- Link double_bracket_assembly_5 -->
+    <link name="double_bracket_assembly_5">
+        <inertial>
+            <origin xyz="0.028 1.20994e-08 0.019" rpy="0 0 0"/>
+            <mass value="0.0246869"/>
+            <inertia ixx="9.32829e-06" ixy="-5.03238e-12" ixz="-5.03238e-12" iyy="8.77841e-06" iyz="7.40111e-15" izz="8.77841e-06"/>
+        </inertial>
+        <!-- Part fr12_h101_13 -->
+        <visual>
+            <origin xyz="0.056 0 0.019" rpy="0 -0 1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_13_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.056 0 0.019" rpy="0 -0 1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_h101_14 -->
+        <visual>
+            <origin xyz="0 0 0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_14_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Link femur_assembly_5 -->
+    <link name="femur_assembly_5">
+        <inertial>
+            <origin xyz="-7.54726e-06 -0.0176085 -0.0180586" rpy="0 0 0"/>
+            <mass value="0.13198"/>
+            <inertia ixx="5.98948e-05" ixy="1.75405e-08" ixz="1.43469e-08" iyy="2.44197e-05" iyz="-1.39313e-06" izz="5.20149e-05"/>
+        </inertial>
+        <!-- Part dc11_a01_dummy_15 -->
+        <visual>
+            <origin xyz="0 0 -0.019" rpy="0 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_15_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 -0.019" rpy="0 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_s102_9 -->
+        <visual>
+            <origin xyz="1.38778e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+            <material name="fr12_s102_9_material">
+                <color rgba="0.231373 0.380392 0.705882 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="1.38778e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_h101_15 -->
+        <visual>
+            <origin xyz="4.16334e-17 -0.0715 -0.019" rpy="-0 -1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_15_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="4.16334e-17 -0.0715 -0.019" rpy="-0 -1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Link tibia_assembly_5 -->
+    <link name="tibia_assembly_5">
+        <inertial>
+            <origin xyz="-0.0167995 -0.0405638 -0.0184092" rpy="0 0 0"/>
+            <mass value="0.209114"/>
+            <inertia ixx="0.000285113" ixy="-0.000196192" ixz="-2.14462e-06" iyy="0.000286962" iyz="-4.27064e-06" izz="0.000528405"/>
+        </inertial>
+        <!-- Part part_1_5 -->
+        <visual>
+            <origin xyz="0.00565724 0.128232 -0.00920154" rpy="-1.91334e-17 -0 2.77336e-17"/>
+            <geometry>
+                <mesh filename="package://assets/part_1.stl"/>
+            </geometry>
+            <material name="part_1_5_material">
+                <color rgba="0.301961 0.301961 0.301961 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.00565724 0.128232 -0.00920154" rpy="-1.91334e-17 -0 2.77336e-17"/>
+            <geometry>
+                <mesh filename="package://assets/part_1.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part dc11_a01_dummy_16 -->
+        <visual>
+            <origin xyz="0 0 -0.019" rpy="0 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_16_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 -0.019" rpy="0 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_s102_10 -->
+        <visual>
+            <origin xyz="0 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+            <material name="fr12_s102_10_material">
+                <color rgba="0.231373 0.380392 0.705882 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Joint from femur_assembly_5 to tibia_assembly_5 -->
+    <joint name="leg5_tibia" type="revolute">
+        <origin xyz="2.77556e-17 -0.0715 -2.77556e-17" rpy="0 -0 0"/>
+        <parent link="femur_assembly_5"/>
+        <child link="tibia_assembly_5"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+    </joint>
+    <!-- Joint from double_bracket_assembly_5 to femur_assembly_5 -->
+    <joint name="leg5_femur" type="revolute">
+        <origin xyz="0.056 -0.019 0.019" rpy="1.5708 -1.5708 0"/>
+        <parent link="double_bracket_assembly_5"/>
+        <child link="femur_assembly_5"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+    </joint>
+    <!-- Joint from base_assembly to double_bracket_assembly_5 -->
+    <joint name="leg5_coxa" type="revolute">
+        <origin xyz="-0.106519 0.00538834 -0.00556095" rpy="0 -0 3.14159"/>
+        <parent link="base_assembly"/>
+        <child link="double_bracket_assembly_5"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.0472" upper="1.0472"/>
+    </joint>
+    <!-- Link double_bracket_assembly_6 -->
+    <link name="double_bracket_assembly_6">
+        <inertial>
+            <origin xyz="0.028 1.20994e-08 0.019" rpy="0 0 0"/>
+            <mass value="0.0246869"/>
+            <inertia ixx="9.32829e-06" ixy="-5.03238e-12" ixz="-5.03238e-12" iyy="8.77841e-06" iyz="7.40111e-15" izz="8.77841e-06"/>
+        </inertial>
+        <!-- Part fr12_h101_16 -->
+        <visual>
+            <origin xyz="0.056 -1.73472e-18 0.019" rpy="0 -0 1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_16_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.056 -1.73472e-18 0.019" rpy="0 -0 1.5708"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_h101_17 -->
+        <visual>
+            <origin xyz="0 -8.67362e-18 0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_17_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 -8.67362e-18 0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Link femur_assembly_6 -->
+    <link name="femur_assembly_6">
+        <inertial>
+            <origin xyz="-7.54726e-06 -0.0176085 -0.0188586" rpy="0 0 0"/>
+            <mass value="0.13198"/>
+            <inertia ixx="5.98948e-05" ixy="1.75405e-08" ixz="1.43469e-08" iyy="2.44197e-05" iyz="-1.39313e-06" izz="5.20149e-05"/>
+        </inertial>
+        <!-- Part dc11_a01_dummy_17 -->
+        <visual>
+            <origin xyz="0 2.77556e-17 -0.0198" rpy="0 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_17_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 2.77556e-17 -0.0198" rpy="0 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_s102_11 -->
+        <visual>
+            <origin xyz="0 -0.021 -0.0198" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+            <material name="fr12_s102_11_material">
+                <color rgba="0.231373 0.380392 0.705882 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 -0.021 -0.0198" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_h101_18 -->
+        <visual>
+            <origin xyz="2.77556e-17 -0.0715 -0.0198" rpy="-0 -1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+            <material name="fr12_h101_18_material">
+                <color rgba="0.647059 0.647059 0.647059 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="2.77556e-17 -0.0715 -0.0198" rpy="-0 -1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_h101.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Link tibia_assembly_6 -->
+    <link name="tibia_assembly_6">
+        <inertial>
+            <origin xyz="-0.0167995 -0.0405638 -0.0184092" rpy="0 0 0"/>
+            <mass value="0.209114"/>
+            <inertia ixx="0.000285113" ixy="-0.000196192" ixz="-2.14462e-06" iyy="0.000286962" iyz="-4.27064e-06" izz="0.000528405"/>
+        </inertial>
+        <!-- Part part_1_6 -->
+        <visual>
+            <origin xyz="0.00565724 0.128232 -0.00920154" rpy="0 -1.54074e-33 2.77336e-17"/>
+            <geometry>
+                <mesh filename="package://assets/part_1.stl"/>
+            </geometry>
+            <material name="part_1_6_material">
+                <color rgba="0.301961 0.301961 0.301961 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.00565724 0.128232 -0.00920154" rpy="0 -1.54074e-33 2.77336e-17"/>
+            <geometry>
+                <mesh filename="package://assets/part_1.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part dc11_a01_dummy_18 -->
+        <visual>
+            <origin xyz="0 5.55112e-17 -0.019" rpy="0 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+            <material name="dc11_a01_dummy_18_material">
+                <color rgba="0.980392 0.713725 0.00392157 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 5.55112e-17 -0.019" rpy="0 -0 0"/>
+            <geometry>
+                <mesh filename="package://assets/dc11_a01_dummy.stl"/>
+            </geometry>
+        </collision>
+        <!-- Part fr12_s102_12 -->
+        <visual>
+            <origin xyz="-2.77556e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+            <material name="fr12_s102_12_material">
+                <color rgba="0.231373 0.380392 0.705882 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="-2.77556e-17 -0.021 -0.019" rpy="1.5708 1.5708 0"/>
+            <geometry>
+                <mesh filename="package://assets/fr12_s102.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Joint from femur_assembly_6 to tibia_assembly_6 -->
+    <joint name="leg6_tibia" type="revolute">
+        <origin xyz="2.77556e-17 -0.0715 -0.0008" rpy="0 -0 0"/>
+        <parent link="femur_assembly_6"/>
+        <child link="tibia_assembly_6"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+    </joint>
+    <!-- Joint from double_bracket_assembly_6 to femur_assembly_6 -->
+    <joint name="leg6_femur" type="revolute">
+        <origin xyz="0.056 -0.019 0.019" rpy="1.5708 -1.5708 0"/>
+        <parent link="double_bracket_assembly_6"/>
+        <child link="femur_assembly_6"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.5708" upper="1.5708"/>
+    </joint>
+    <!-- Joint from base_assembly to double_bracket_assembly_6 -->
+    <joint name="leg6_coxa" type="revolute">
+        <origin xyz="-0.0862607 -0.103568 -0.00556095" rpy="0 -0 -2.35739"/>
+        <parent link="base_assembly"/>
+        <child link="double_bracket_assembly_6"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10" lower="-1.0472" upper="1.0472"/>
+    </joint>
+    <!-- Joint from base_link to base_assembly -->
+    <joint name="base_link_to_base_assembly" type="fixed">
+        <origin xyz="0 0 0" rpy="0 -0 0"/>
+        <parent link="base_link"/>
+        <child link="base_assembly"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10"/>
+    </joint>
+    <!-- Link partb -->
+    <link name="partb">
+        <inertial>
+            <origin xyz="0.00027379 0.00615829 0.033939" rpy="0 0 0"/>
+            <mass value="0.19553"/>
+            <inertia ixx="0.000704455" ixy="-1.00934e-07" ixz="0" iyy="0.000498137" iyz="0" izz="0.001201"/>
+        </inertial>
+        <!-- Part partb -->
+        <visual>
+            <origin xyz="0.000265282 0.00538834 0.030439" rpy="0 -0 1.11022e-16"/>
+            <geometry>
+                <mesh filename="package://assets/partb.stl"/>
+            </geometry>
+            <material name="partb_material">
+                <color rgba="0.615686 0.811765 0.929412 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.000265282 0.00538834 0.030439" rpy="0 -0 1.11022e-16"/>
+            <geometry>
+                <mesh filename="package://assets/partb.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Joint from base_link to partb -->
+    <joint name="base_link_to_partb" type="fixed">
+        <origin xyz="0 0 0" rpy="0 -0 0"/>
+        <parent link="base_link"/>
+        <child link="partb"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="10" velocity="10"/>
+    </joint>
+</robot>
