@@ -285,6 +285,59 @@ void turning(int &start, double thetaList[], Leg *legs, dynamixel::PacketHandler
     start = tripod_x;
 }
 
+void wave(double thetaList[], Leg *legs, dynamixel::PacketHandler *packetHandler, dynamixel::PortHandler *portHandler, dynamixel::GroupSyncWrite &groupSyncWrite, int wave_leg[], int wave_leg_length)
+{
+    // Use Bezier curves for smoother waving motion
+    for (double t = 0; t <= 1; t += 0.02)
+    {
+        double wave_x = bezierPoint(-200, -100, 0, t);
+        double wave_y = bezierPoint(150, 170, 150, t);
+        double wave_z = bezierPoint(150, 170, 150, t);
+        
+        IK(wave_x, wave_y, wave_z, thetaList);
+        calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
+        move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
+        
+        usleep(10000); // Shorter sleep for smoother animation
+    }
+
+    // Wave back to starting position
+    for (double t = 0; t <= 1; t += 0.02)
+    {
+        double wave_x = bezierPoint(0, -80, -160, t);
+        double wave_y = bezierPoint(150, 170, 150, t);
+        double wave_z = bezierPoint(150, 170, 150, t);
+        
+        IK(wave_x, wave_y, wave_z, thetaList);
+        calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
+        move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
+        
+        usleep(10000);
+    }
+
+    for (double t = 0; t <= 1; t += 0.02)
+    {
+        double wave_x = bezierPoint(-160, -60, -40, t);
+        double wave_y = bezierPoint(150, 170, 150, t);
+        double wave_z = bezierPoint(150, 170, 150, t);
+        IK(wave_x, wave_y, wave_z, thetaList);
+        calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
+        move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
+        usleep(10000);
+    }
+
+    for (double t = 0; t <= 1; t += 0.02)
+    {
+        double wave_x = bezierPoint(-40, -30, -100, t);
+        double wave_y = bezierPoint(150, 170, 150, t);
+        double wave_z = bezierPoint(150, 170, 150, t);
+        IK(wave_x, wave_y, wave_z, thetaList);
+        calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
+        move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
+        usleep(10000);
+    }
+}
+
 int main()
 {
     dynamixel::PortHandler::getPortHandler(DEVICENAME);
@@ -391,29 +444,32 @@ int main()
         if (getch() == ESC_ASCII_VALUE)
             break;
 
-        IK(-180, 150, 150, thetaList);
-        calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
-        move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
+        wave(thetaList, legs, packetHandler, portHandler, groupSyncWrite, wave_leg, wave_leg_length);
 
-        usleep(500000);
 
-        IK(-30, 150, 150, thetaList);
-        calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
-        move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
+        // IK(-180, 150, 150, thetaList);
+        // calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
+        // move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
 
-        usleep(500000);
+        // usleep(500000);
 
-        IK(-180, 150, 150, thetaList);
-        calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
-        move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
+        // IK(-30, 150, 150, thetaList);
+        // calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
+        // move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
 
-        usleep(500000);
+        // usleep(500000);
 
-        IK(-30, 150, 150, thetaList);
-        calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
-        move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
+        // IK(-180, 150, 150, thetaList);
+        // calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
+        // move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
 
-        usleep(500000);
+        // usleep(500000);
+
+        // IK(-30, 150, 150, thetaList);
+        // calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
+        // move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
+
+        // usleep(500000);
 
     }
 
