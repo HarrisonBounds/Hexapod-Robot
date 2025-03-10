@@ -37,6 +37,8 @@
 
 #define Y_REST 50
 #define Z_REST -110
+#define Y_OFFSET 250
+#define Z_OFFSET 90
 #define DEGREE_MAX 360.0
 #define POSITION_MAX 4095.0
 #define PI 3.14159
@@ -121,11 +123,58 @@ void IK(double x, double y, double z, double thetaList[])
 
     theta3 = phi3 - 90;
 
-    // printf("IK Angles in function (degrees): theta1=%f, theta2=%f, theta3=%f\n", theta1, theta2, theta3); // Debug print
-
     thetaList[0] = theta1;
     thetaList[1] = theta2;
     thetaList[2] = theta3;
+}
+
+void FK(double theta1, double theta2, double theta3, double position[])
+{
+    // Convert degrees to radians
+    double theta1_rad = theta1 * (PI / 180.0);
+    double theta2_rad = theta2 * (PI / 180.0);
+    double theta3_rad = theta3 * (PI / 180.0);
+
+    // Calculate forward kinematics
+    double x = R1 * sin(theta1_rad) +
+               R2 * sin(theta1_rad) * cos(theta2_rad) +
+               R3 * sin(theta1_rad) * cos(theta2_rad + theta3_rad);
+
+    double y = R1 * cos(theta1_rad) +
+               R2 * cos(theta1_rad) * cos(theta2_rad) +
+               R3 * cos(theta1_rad) * cos(theta2_rad + theta3_rad) - Y_REST;
+
+    double z = R2 * sin(theta2_rad) +
+               R3 * sin(theta2_rad + theta3_rad) - Z_REST;
+
+    position[0] = x;
+    position[1] = y - Y_OFFSET;
+    position[2] = z - Z_OFFSET;
+}
+
+void getCurrentLegPosition(Leg *legs, int num_legs, double current_positions[][3], dynamixel::PacketHandler *packetHandler, dynamixel::PortHandler *portHandler)
+{
+    int32_t dxl_present_position[3] = {0};
+    uint8_t dxl_error = 0;
+    int dxl_comm_result = COMM_TX_FAIL;
+    double current_angles[3] = {0};
+
+    // Iterate over all legs
+    for (int i = 0; i < num_legs; i++)
+    {
+        // Read current position for each motor in the leg
+        for (int j = 0; j < 3; j++)
+        {
+            dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, legs[i].motor_ids[j], ADDR_PRESENT_POSITION, (uint32_t *)&dxl_present_position[j], &dxl_error);
+
+            double home_angle = (legs[i].home_positions[j] / POSITION_MAX) * DEGREE_MAX;
+            double current_angle = (dxl_present_position[j] / POSITION_MAX) * DEGREE_MAX;
+            current_angles[j] = home_angle - current_angle;
+        }
+
+        // Calculate forward kinematics to get x,y,z for the current leg
+        FK(current_angles[0], current_angles[1], current_angles[2], current_positions[i]);
+    }
 }
 
 double bezierPoint(float p0, float p1, float p2, float t)
@@ -265,7 +314,6 @@ void turning(int &start, double thetaList[], Leg *legs, dynamixel::PacketHandler
         usleep(10000);
     }
 
-    
     for (double t = 0; t <= 1; t += 0.01)
     {
         turn1_x = bezierPoint(-tripod_x, tripod_x / 2, tripod_x, t);
@@ -293,11 +341,11 @@ void wave(double thetaList[], Leg *legs, dynamixel::PacketHandler *packetHandler
         double wave_x = bezierPoint(-200, -100, 0, t);
         double wave_y = bezierPoint(150, 170, 150, t);
         double wave_z = bezierPoint(150, 170, 150, t);
-        
+
         IK(wave_x, wave_y, wave_z, thetaList);
         calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
         move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
-        
+
         usleep(10000); // Shorter sleep for smoother animation
     }
 
@@ -307,11 +355,11 @@ void wave(double thetaList[], Leg *legs, dynamixel::PacketHandler *packetHandler
         double wave_x = bezierPoint(0, -80, -160, t);
         double wave_y = bezierPoint(150, 170, 150, t);
         double wave_z = bezierPoint(150, 170, 150, t);
-        
+
         IK(wave_x, wave_y, wave_z, thetaList);
         calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
         move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
-        
+
         usleep(10000);
     }
 
@@ -338,6 +386,27 @@ void wave(double thetaList[], Leg *legs, dynamixel::PacketHandler *packetHandler
     }
 }
 
+void displayMenu()
+{
+    printf("\n===== HEXAPOD CONTROL MENU =====\n");
+    printf("1. Walk Forward (Tripod Gait)\n");
+    printf("2. Turn\n");
+    printf("3. Wave\n");
+    printf("4. Return to Home Position\n");
+    printf("ESC. Exit\n");
+    printf("================================\n");
+    printf("Enter your choice: ");
+}
+
+void returnToHome(double thetaList[], Leg *legs, dynamixel::PacketHandler *packetHandler, dynamixel::PortHandler *portHandler, dynamixel::GroupSyncWrite &groupSyncWrite, int home_indices[], int home_indices_length)
+{
+    printf("Returning to home position...\n");
+    IK(0, 0, 0, thetaList);
+    calculatePosition(legs, thetaList, home_indices, home_indices_length);
+    move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
+    usleep(500000);
+}
+
 int main()
 {
     dynamixel::PortHandler::getPortHandler(DEVICENAME);
@@ -355,6 +424,7 @@ int main()
 
     // Move
     double thetaList[3] = {0};
+    double current_positions[NUM_LEGS][3] = {0};
 
     int goal;
 
@@ -372,7 +442,7 @@ int main()
     int tripod_indices_length1a = sizeof(tripod_indices1a) / sizeof(tripod_indices1a[0]);
     int tripod_indices_length2a = sizeof(tripod_indices2a) / sizeof(tripod_indices2a[0]);
 
-    int wave_leg[1] = {0};
+    int wave_leg[1] = {2};
     int wave_leg_length = sizeof(wave_leg) / sizeof(wave_leg[0]);
 
     double turn1_x;
@@ -385,15 +455,17 @@ int main()
     double timestep = 0.01;
 
     int start = 0;
+    char choice;
+    bool running = true;
 
     Leg legs[NUM_LEGS] =
         {
             {{1, 2, 3}, {2000, 2080, 2055}, {0, 0, 0}},
-            {{4, 5, 6}, {2100, 2067, 2033}, {0, 0, 0}},    // 2216, 2067, 2033
-            {{7, 8, 9}, {2100, 2065, 2003}, {0, 0, 0}},    // 2100, 2065, 2003
-            {{10, 11, 12}, {2100, 2055, 2069}, {0, 0, 0}}, // 2106, 2055, 2069
-            {{13, 14, 15}, {2101, 2046, 2075}, {0, 0, 0}}, // 2101, 2046, 2075
-            {{16, 17, 18}, {2000, 2043, 2057}, {0, 0, 0}}  // 1989, 2043, 2057
+            {{4, 5, 6}, {2100, 2067, 2033}, {0, 0, 0}},    
+            {{7, 8, 9}, {2100, 2065, 2003}, {0, 0, 0}},   
+            {{10, 11, 12}, {2100, 2055, 2069}, {0, 0, 0}}, 
+            {{13, 14, 15}, {2101, 2046, 2075}, {0, 0, 0}}, 
+            {{16, 17, 18}, {2000, 2043, 2057}, {0, 0, 0}}  
         };
 
     // Open port
@@ -438,39 +510,67 @@ int main()
 
     move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
 
-    while (true)
+    while (running)
     {
-        printf("Press any key to continue. (Press [ESC] to exit)\n");
-        if (getch() == ESC_ASCII_VALUE)
-            break;
+        getCurrentLegPosition(legs, NUM_LEGS, current_positions, packetHandler, portHandler);
+        for (int i = 0; i < NUM_LEGS; i++)
+        {
+            printf("Leg %d position: x=%.2f, y=%.2f, z=%.2f\n", i, current_positions[i][0], current_positions[i][1], current_positions[i][2]);
+        }
 
-        wave(thetaList, legs, packetHandler, portHandler, groupSyncWrite, wave_leg, wave_leg_length);
+        // displayMenu();
+        // choice = getch();
+        // printf("\n");
 
+        // switch (choice)
+        // {
+        // case '1':
+        //     printf("Walking forward (Tripod Gait)\n");
 
-        // IK(-180, 150, 150, thetaList);
-        // calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
-        // move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
+        //     tripodGait(tripod_x, thetaList, legs, packetHandler, portHandler, groupSyncWrite, tripod_indices1, tripod_indices_length1, tripod_indices1a, tripod_indices_length1a, tripod_indices2, tripod_indices_length2, tripod_indices2a, tripod_indices_length2a, home_indices, home_indices_length, start);
 
-        // usleep(500000);
+        //     returnToHome(thetaList, legs, packetHandler, portHandler, groupSyncWrite, home_indices, home_indices_length);
+        //     break;
 
-        // IK(-30, 150, 150, thetaList);
-        // calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
-        // move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
+        // case '2':
+        //     printf("Turning. Press ESC to stop.\n");
+        //     for (int i = 0; i < 5; i++)
+        //     {
+        //         turning(start, thetaList, legs, packetHandler, portHandler, groupSyncWrite,
+        //                 tripod_indices1, tripod_indices_length1, tripod_indices2, tripod_indices_length2,
+        //                 home_indices, home_indices_length, tripod_x);
 
-        // usleep(500000);
+        //         if (kbhit() && getch() == ESC_ASCII_VALUE)
+        //         {
+        //             break;
+        //         }
+        //     }
+        //     // Return to home position after turning
+        //     returnToHome(thetaList, legs, packetHandler, portHandler, groupSyncWrite, home_indices, home_indices_length);
+        //     break;
 
-        // IK(-180, 150, 150, thetaList);
-        // calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
-        // move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
+        // case '3':
+        //     printf("Waving\n");
 
-        // usleep(500000);
+        //     wave(thetaList, legs, packetHandler, portHandler, groupSyncWrite, wave_leg, wave_leg_length);
 
-        // IK(-30, 150, 150, thetaList);
-        // calculatePosition(legs, thetaList, wave_leg, wave_leg_length);
-        // move(packetHandler, portHandler, groupSyncWrite, legs, wave_leg, wave_leg_length);
+        //     returnToHome(thetaList, legs, packetHandler, portHandler, groupSyncWrite, home_indices, home_indices_length);
+        //     break;
 
-        // usleep(500000);
+        // case '4':
+        //     // Just return to home position
+        //     returnToHome(thetaList, legs, packetHandler, portHandler, groupSyncWrite, home_indices, home_indices_length);
+        //     break;
 
+        // case ESC_ASCII_VALUE:
+        //     printf("Exiting program...\n");
+        //     running = false;
+        //     break;
+
+        // default:
+        //     printf("Invalid choice. Please try again.\n");
+        //     break;
+        // }
     }
 
     // Disable DYNAMIXEL Torque
