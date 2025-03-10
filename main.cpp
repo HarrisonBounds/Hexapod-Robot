@@ -180,14 +180,80 @@ void calculatePosition(Leg *legs, double thetaList[], int leg_indices[], int arr
     }
 }
 
-void tripodGait()
+void tripodGait(int& tripod_x, double thetaList[], Leg *legs, dynamixel::PacketHandler *packetHandler, dynamixel::PortHandler *portHandler, dynamixel::GroupSyncWrite &groupSyncWrite, int tripod_indices1[], int tripod_indices_length1, int tripod_indices1a[], int tripod_indices_length1a, int tripod_indices2[], int tripod_indices_length2, int tripod_indices2a[], int tripod_indices_length2a, int home_indices[], int home_indices_length, int start)
+{
+
+    int tripod1_x = 0;
+    int tripod1_z = 0;
+    int tripod1a_x = 0;
+    int tripod1a_z = 0;
+    int tripod2_x = 0;
+    int tripod2_z = 0; 
+    int tripod2a_x = 0;
+    int tripod2a_z = 0;
+
+    for (double t = 0; t <= 1; t += 0.01)
+    {
+        tripod1_x = bezierPoint(-start, tripod_x/2, tripod_x, t);
+        tripod1_z = bezierPoint(0, 40, 0, t);
+        IK(tripod1_x, 0, tripod1_z, thetaList);
+        calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
+
+        tripod1a_x = bezierPoint(start, tripod_x/2, -tripod_x, t);
+        tripod1a_z = bezierPoint(0, 40, 0, t);
+        IK(tripod1a_x, 0, tripod1a_z, thetaList);
+        calculatePosition(legs, thetaList, tripod_indices1a, tripod_indices_length1a);
+
+        tripod2_x = bezierPoint(-start, tripod_x/2, tripod_x, t);
+        IK(tripod2_x, 0, 0, thetaList);
+        calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
+
+        tripod2a_x = bezierPoint(start, tripod_x/2, -tripod_x, t);
+        IK(tripod2a_x, 0, 0, thetaList);
+        calculatePosition(legs, thetaList, tripod_indices2a, tripod_indices_length2a);
+
+        move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
+
+        usleep(10000);
+        
+    }
+
+    for (double t = 0; t <= 1; t += 0.01)
+    {
+        tripod1_x = bezierPoint(tripod_x, tripod_x/2, -tripod_x, t);
+        IK(tripod1_x, 0, 0, thetaList);
+        calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
+
+        tripod1a_x = bezierPoint(-tripod_x, tripod_x/2, tripod_x, t);
+        IK(tripod1a_x, 0, 0, thetaList);
+        calculatePosition(legs, thetaList, tripod_indices1a, tripod_indices_length1a);
+
+        tripod2_x = bezierPoint(tripod_x, tripod_x/2, -tripod_x, t);
+        tripod2_z = bezierPoint(0, 40, 0, t);
+        IK(tripod2_x, 0, tripod2_z, thetaList);
+        calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
+
+        tripod2a_x = bezierPoint(-tripod_x, tripod_x/2, tripod_x, t);
+        tripod2a_z = bezierPoint(0, 40, 0, t);
+        IK(tripod2a_x, 0, tripod2a_z, thetaList);
+        calculatePosition(legs, thetaList, tripod_indices2a, tripod_indices_length2a);
+
+        move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
+
+        usleep(10000);
+        
+    }
+
+    start = tripod_x;
+}
+
+void quadGait()
 {
     
 }
 
 int main()
 {
-
     dynamixel::PortHandler::getPortHandler(DEVICENAME);
 
     dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
@@ -195,7 +261,6 @@ int main()
 
     dynamixel::GroupSyncWrite groupSyncWrite(portHandler, packetHandler, ADDR_GOAL_POSITION, 4);
     
-
     int dxl_comm_result = COMM_TX_FAIL;
 
     uint8_t dxl_error = 0;
@@ -207,37 +272,31 @@ int main()
 
     int goal;
 
+    //All legs
     int home_indices[6] = {0, 1, 2, 3, 4, 5};
-
-    int tripod_indices1[3] = {0, 2, 4};
-    int tripod_indices2[3] = {1, 3, 5};
-
-    int tripod_indices1a[1] = {4};
-    int tripod_indices2a[1] = {1};
-
-   
-    int tripod_x = 30;
-    int tripod_y = 0;
-
-    int tripod1_x = 0;
-    int tripod1_z = 0;
-    int tripod1a_x = 0;
-    int tripod1a_z = 0;
-
-    int tripod2_x = 0;
-    int tripod2_z = 0; 
-    int tripod2a_x = 0;
-    int tripod2a_z = 0; 
-
-    int start = 0;
-    
-
     int home_indices_length = sizeof(home_indices) / sizeof(home_indices[0]);
 
+    //Calculate leg movement for tripod gait
+    int tripod_indices1[3] = {0, 2, 4};
+    int tripod_indices2[3] = {1, 3, 5};
+    int tripod_indices1a[1] = {4};
+    int tripod_indices2a[1] = {1};
     int tripod_indices_length1 = sizeof(tripod_indices1) / sizeof(tripod_indices1[0]);
     int tripod_indices_length2 = sizeof(tripod_indices2) / sizeof(tripod_indices2[0]);
     int tripod_indices_length1a = sizeof(tripod_indices1a) / sizeof(tripod_indices1a[0]);
     int tripod_indices_length2a = sizeof(tripod_indices2a) / sizeof(tripod_indices2a[0]);
+
+    double turn1_x;
+    double turn1_z;
+    double turn2_x;
+    double turn2_z;
+
+    int tripod_x = 30; //Step size in x direction
+    int quad_x = 0;
+    double timestep = 0.01;
+
+    int start = 0;
+    
 
     Leg legs[NUM_LEGS] =
         {
@@ -297,25 +356,17 @@ int main()
         if (getch() == ESC_ASCII_VALUE)
                 break;
 
+            // //TURNING
         for (double t = 0; t <= 1; t += 0.01)
         {
-            tripod1_x = bezierPoint(-start, tripod_x/2, tripod_x, t);
-            tripod1_z = bezierPoint(0, 40, 0, t);
-            IK(tripod1_x, 0, tripod1_z, thetaList);
+            turn1_x = bezierPoint(start, tripod_x/2, -tripod_x, t);
+            turn1_z = bezierPoint(0, 30, 0, t);
+            IK(turn1_x, 0, turn1_z, thetaList);
             calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
 
-            tripod1a_x = bezierPoint(start, tripod_x/2, -tripod_x, t);
-            tripod1a_z = bezierPoint(0, 40, 0, t);
-            IK(tripod1a_x, 0, tripod1a_z, thetaList);
-            calculatePosition(legs, thetaList, tripod_indices1a, tripod_indices_length1a);
-
-            tripod2_x = bezierPoint(-start, tripod_x/2, tripod_x, t);
-            IK(tripod2_x, 0, 0, thetaList);
+            turn2_x = bezierPoint(-start, tripod_x/2, tripod_x, t);
+            IK(turn2_x, 0, 0, thetaList);
             calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
-
-            tripod2a_x = bezierPoint(start, tripod_x/2, -tripod_x, t);
-            IK(tripod2a_x, 0, 0, thetaList);
-            calculatePosition(legs, thetaList, tripod_indices2a, tripod_indices_length2a);
 
             move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
 
@@ -325,23 +376,15 @@ int main()
 
         for (double t = 0; t <= 1; t += 0.01)
         {
-            tripod1_x = bezierPoint(tripod_x, tripod_x/2, -tripod_x, t);
-            IK(tripod1_x, 0, 0, thetaList);
+            turn1_x = bezierPoint(-tripod_x, tripod_x/2, tripod_x, t);
+            
+            IK(turn1_x, 0, 0, thetaList);
             calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
 
-            tripod1a_x = bezierPoint(-tripod_x, tripod_x/2, tripod_x, t);
-            IK(tripod1a_x, 0, 0, thetaList);
-            calculatePosition(legs, thetaList, tripod_indices1a, tripod_indices_length1a);
-
-            tripod2_x = bezierPoint(tripod_x, tripod_x/2, -tripod_x, t);
-            tripod2_z = bezierPoint(0, 40, 0, t);
-            IK(tripod2_x, 0, tripod2_z, thetaList);
+            turn2_x = bezierPoint(tripod_x, tripod_x/2, -tripod_x, t);
+            turn2_z = bezierPoint(0, 30, 0, t);
+            IK(turn2_x, 0, turn2_z, thetaList);
             calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
-
-            tripod2a_x = bezierPoint(-tripod_x, tripod_x/2, tripod_x, t);
-            tripod2a_z = bezierPoint(0, 40, 0, t);
-            IK(tripod2a_x, 0, tripod2a_z, thetaList);
-            calculatePosition(legs, thetaList, tripod_indices2a, tripod_indices_length2a);
 
             move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
 
@@ -350,48 +393,11 @@ int main()
         }
 
         start = tripod_x;
-
     }
     
     
     
-    // //TURNING
-    // for (double t = 0; t <= 1; t += 0.01)
-    // {
-    //     tripod1_x = bezierPoint(start, tripod_x/2, -tripod_x, t);
-    //     tripod1_z = bezierPoint(0, 30, 0, t);
-    //     IK(tripod1_x, 0, tripod1_z, thetaList);
-    //     calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
 
-    //     tripod2_x = bezierPoint(-start, tripod_x/2, tripod_x, t);
-    //     IK(tripod2_x, 0, 0, thetaList);
-    //     calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
-
-    //     move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
-
-    //     usleep(10000);
-        
-    // }
-
-    // for (double t = 0; t <= 1; t += 0.01)
-    // {
-    //     tripod1_x = bezierPoint(-tripod_x, tripod_x/2, tripod_x, t);
-        
-    //     IK(tripod1_x, 0, 0, thetaList);
-    //     calculatePosition(legs, thetaList, tripod_indices1, tripod_indices_length1);
-
-    //     tripod2_x = bezierPoint(tripod_x, tripod_x/2, -tripod_x, t);
-    //     tripod2_z = bezierPoint(0, 30, 0, t);
-    //     IK(tripod2_x, 0, tripod2_z, thetaList);
-    //     calculatePosition(legs, thetaList, tripod_indices2, tripod_indices_length2);
-
-    //     move(packetHandler, portHandler, groupSyncWrite, legs, home_indices, home_indices_length);
-
-    //     usleep(10000);
-        
-    // }
-
-    // start = tripod_x;
 
     // Disable DYNAMIXEL Torque
     for (int i = 0; i < NUM_DXL; i++)
