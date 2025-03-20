@@ -262,11 +262,41 @@ https://github.com/user-attachments/assets/4bb8eb8e-8e12-4749-ad72-5f7c3612408d
 
 ### Week 7
 
+The robot stands! Everything is mounted onto the base and the run can run untethered. The issue here is that the feet need to slide under the robot for it to support itself, so the floor needs to not have mucch friction.
+
+However, when testing the walking, I noticed there was something wrong with the gait. I had accidentally programmed the turning gait instead. 
+
+TURNING VIDEO HERE
+
+I thought it was an easy fix but instead of that, I had to dive into the mechanics of the legs to see how each one was moving in respect to its tripod. This took some time because I kepy having to reprogram and test. I did end up getting this dancing motion where the feet weren't moving at all. This was my favorite mistake Ive made.
+
+DANCE VIDEO
+
 ### Week 8 
+
+Finally I have the hexapod moving!! My first goal is all but done. The hexapod returns to home every it takes a step, which is not ideal. It's not too big of a deal because the tripod gait works well. The robot moves in a straight line and looks good while doing it! 
+
+MOVING VIDEO
+
+I wanted a way to take the base off of the top without having to unscrew it everytime. I thought magnets could work well if mounted with standoffs, but after time "wasted" with this, I figured it would be best to move on to my stretch goal. 
+
+I had tried multiple times before to export my URDF from onshape using a tool called onshape-to-robot. To no surprise there was more to it than it seemed. A cohort mate of mine, Han, helped me specify all of the correct requirements, and I finally remade my CAD model for the millionth time and got it to visualize in pybullet. Pybullet was just a test to see if the urdf would actually move with the correct joint locations, and at the end of this week it did!!
 
 ### Week 9
 
+The Reinforcement Learning part of this project seems daunting, but luckily I was working on another project training the Unitree Go2 robot dog to perform different tasks. I used some code from the other project, added two new legs (both the hexapod and the dog have three joints per leg), and the training script was running! 
+
+RL VIDEO
+
+Its walking! Currently its fairly slow, after getting it working, I needed to decide if I wanted to tune it to be perfect, or start working on the sim-to-real. I decided to pursue the sim-to-real option, although time was running out and I had many other deadlines to handle.
+
+At the end of this week I added a menu for the hexapod. This way instad of a controller (too much for what im trying to do), the user can just give it commands from a simple menu. This menu includes walking, turning, and waving right now. Before showing this off at the MSI museum in a few weeks, I want to make this menu more robust and include more options, but for right now this is what we got. 
+
 ### Week 10
+
+Final Week!! I can't believe I made it this far. I built the hexapod from scratch, programmed it to walk untethered with a tripod gait, turn, wave, and applied reinforcement learning in simulation! I really wanted to achieve sim-to-real, but I think its best to continue the progress I have made into the next quarter. 
+
+My thoughts with sim-to-real is to clip the actions outputted by the policy network and apply them to the joints of the hexapod (low level control). This and some tuning will hopefully give me some insight on next steps, and help me research how to make sim-to-real possible. 
 
 
 
