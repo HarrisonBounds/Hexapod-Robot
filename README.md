@@ -1,104 +1,104 @@
-# Hexapod Project Proposal
+# Hexapod Robot Control
 
-## Project Description
+This repository contains the C++ code for controlling a hexapod robot equipped with Dynamixel servomotors. The code implements inverse and forward kinematics, tripod gait for walking, turning maneuvers, and a waving motion. It utilizes the Dynamixel SDK for communication with the motors.
 
-- This project aims to mechanically design and program a hexapod robot that can walk with different gaits. Since a hexapod has six legs, it provides stability for walking on different types of ground, providing a robot that can navigate different landscapes for exploration, search and rescue, etc. The goal of this project is to design and build the hexapod legs and base, assemble it, and program it to move with at least three different walking gaits.
+## Features
 
-## Technical Objectives
+* **Inverse Kinematics (IK):** Calculates the joint angles required to reach a desired Cartesian coordinate for each leg.
+* **Forward Kinematics (FK):** Calculates the Cartesian coordinates of the leg's end effector based on the current joint angles.
+* **Tripod Gait:** Implements a stable walking motion by coordinating the movement of alternating tripods of legs.
+* **Turning:** Enables the robot to turn by coordinating leg movements.
+* **Wave Motion:** A demonstration of coordinated leg movement to produce a wave-like action.
+* **Dynamixel SDK Integration:** Uses the Dynamixel SDK 2.0 for robust communication with Dynamixel X-series servomotors.
+* **Bezier Curves:** Employs Bezier curves to generate smooth and natural-looking motions for walking and waving.
+* **Modular Leg Structure:** Defines a `Leg` structure to manage the motor IDs and home/move positions for each leg.
+* **Interactive Menu (Commented Out):** Includes a commented-out interactive menu for controlling different actions (walk, turn, wave, home).
+* **Real-time Position Feedback:** Continuously reads and displays the current position of each leg.
 
-#### Fallback Goal
+## Prerequisites
 
-- The hexapod is built and can at least move. If the building process is too in depth, a hexapod kit (which I already have) can be used in place of the build and be programmed. The kit comes with all motors and an acrylic frame. 
+* **Dynamixel SDK:** You need to have the Dynamixel SDK installed on your system. Follow the installation instructions provided in the official [ROBOTIS-MANIPULATOR-H](https://emanual.robotis.com/docs/en/software/dynamixel/dynamixel_sdk/overview/) documentation.
+* **Dynamixel Servomotors:** This code is designed for Dynamixel X-series servomotors. The `DXL_IDS` array in the code defines the IDs of the 18 motors used (3 per leg). Ensure your motors are properly connected.
+* **USB2DYNAMIXEL:** A USB to Dynamixel communication interface is required to connect your computer to the Dynamixel bus.
+* **Serial Port Permissions:** Ensure your user has the necessary permissions to access the serial port specified by `DEVICENAME` (e.g., `/dev/ttyUSB0` on Linux). You might need to add your user to the `dialout` group (Linux).
 
-#### Core Goal
+## Hardware Configuration
 
-- The core goal of this project is to completely build the hexapod from scratch using CAD software for design and a 3d printer for creation. After assembly, the hexapod will be programmed to have different 3 different walking gaits for different types of movement.
+The code assumes a hexapod robot with the following motor ID configuration:
 
-#### Stretch Goal
+* **Leg 1:** Motors 1, 2, 3
+* **Leg 2:** Motors 4, 5, 6
+* **Leg 3:** Motors 7, 8, 9
+* **Leg 4:** Motors 10, 11, 12
+* **Leg 5:** Motors 13, 14, 15
+* **Leg 6:** Motors 16, 17, 18
 
-- If everything goes well, more walking gaits could be added, or reinforcement learning can be implemented. With this accomplished, an optimzed gait could be found for a hexapod. 
+The `Leg` structure also defines the `home_positions` for each motor in each leg. These values should correspond to the robot's default standing or "home" configuration. You might need to adjust these values based on your robot's physical setup.
 
-## Learning Objective
+## Software Setup
 
-- The ability to design and assemble a robot from scratch, giving me the knowledge of how each part works giving overall knowledge about the system.
+1.  **Clone the Repository:**
+    ```bash
+    git clone <repository_url>
+    cd <repository_directory>
+    ```
 
-- Use C++ to design a system from scratch in intergration with an embedded system to control a robot all onboard.
+2.  **Install Dynamixel SDK (if not already installed):**
+    Follow the instructions in the [Dynamixel SDK documentation](https://emanual.robotis.com/docs/en/software/dynamixel/dynamixel_sdk/overview/). Make sure the C++ library is built and installed correctly on your system.
 
-- Intergrating Inverse Kinematics in a real system to move the robot to a desired location.
+3.  **Compilation:**
+    You will need to compile the `main.cpp` file. The compilation process will depend on your system and how you installed the Dynamixel SDK. You might need to create a `CMakeLists.txt` file or use a direct g++ compilation command, linking against the Dynamixel SDK libraries.
 
-BONUS GOAL
-- Use a Reinforcemnt Learning Platform to integrate into a real robot
+    **Example using g++ (assuming the Dynamixel SDK headers and libraries are in standard locations or you adjust the include and link paths accordingly):**
+    ```bash
+    g++ -o hexapod main.cpp -I/path/to/dynamixel_sdk/include -L/path/to/dynamixel_sdk/lib -ldynamixel_sdk
+    ```
+    Replace `/path/to/dynamixel_sdk/include` and `/path/to/dynamixel_sdk/lib` with the actual paths to your Dynamixel SDK installation.
 
-## Block Diagram
+## Usage
 
-<div style="text-align: center;">
-<img src="media/Hexapod_Block_Diagram.png" width="600" height="500">
-</div>
+1.  **Connect the Robot:** Ensure your hexapod robot is powered on and connected to your computer via the USB2DYNAMIXEL adapter.
 
-## Tasks
+2.  **Run the Executable:** Execute the compiled program:
+    ```bash
+    ./hexapod
+    ```
 
-1. Design and print one leg for the Hexapod, using Onshape and a 3d printer. **2-3 weeks**
+3.  **Observe the Output:** The program will initialize the Dynamixel motors, move the robot to its home position, and then continuously print the current position of each leg.
 
-2. Test the servos and get Inverse Kinematics working on one leg. **1-2 weeks**
+4.  **Interactive Menu (Commented Out):** To enable the interactive menu, uncomment the `displayMenu()` call and the `switch` statement in the `main` function. You can then control the robot's actions by pressing the corresponding numbers and 'ESC' to exit.
 
-3. Print the next two legs and assemble half of the hexapod. **1-2 weeks**
+## Code Structure
 
-4. Get the Inverse Kinematics implemented for half of the robot. **1-2 weeks**
+* **`main.cpp`:** Contains the main program logic, including initialization, control loop, and the commented-out interactive menu.
+* **Header Includes:** Includes necessary standard C/C++ libraries and the Dynamixel SDK header.
+* **Definitions:** Defines constants for control table addresses, baud rate, protocol version, device name, torque enable/disable values, and kinematic parameters.
+* **`Leg` Structure:** Defines a structure to hold motor IDs, home positions, and move positions for each leg.
+* **`getch()` and `kbhit()`:** Platform-specific functions for non-blocking keyboard input (used for the commented-out interactive menu).
+* **`IK(x, y, z, thetaList[])`:** Implements the inverse kinematics algorithm to calculate joint angles for a given end-effector position.
+* **`FK(theta1, theta2, theta3, position[])`:** Implements the forward kinematics algorithm to calculate the end-effector position for given joint angles.
+* **`getCurrentLegPosition(...)`:** Reads the current positions of the leg motors and calculates the current Cartesian position of each leg's end effector using forward kinematics.
+* **`bezierPoint(p0, p1, p2, t)`:** Calculates a point on a quadratic Bezier curve.
+* **`move(...)`:** Sends goal position commands to the specified motors using the Dynamixel GroupSyncWrite for synchronized movement.
+* **`calculatePosition(...)`:** Converts desired joint angles (from IK) into Dynamixel motor position values.
+* **`tripodGait(...)`:** Implements the tripod gait walking motion using Bezier curves for smooth transitions.
+* **`turning(...)`:** Implements the turning motion using coordinated leg movements and Bezier curves.
+* **`wave(...)`:** Implements a waving motion for one of the legs using Bezier curves.
+* **`displayMenu()`:** (Commented Out) Displays the interactive control menu.
+* **`returnToHome(...)`:** Moves all legs back to their defined home positions.
+* **`main()`:** The main function that initializes the system, enables torque, moves to the home position, and runs the control loop (including the commented-out menu).
 
-5. Assemble the entire robot and implement Inverse Kinematics. **1-2 weeks**
+## Future Work (Reinforcement Learning Integration)
 
-6. Implement different style walking gaits for the hexapod. **1-2 weeks**
+This section will be updated with details about the reinforcement learning work done to further enhance the robot's control and capabilities. Stay tuned for information on:
 
-## Risks, Challenges, and Uncertanties
+* **RL Environment Setup:** How the hexapod control problem is formulated as a reinforcement learning environment.
+* **Reward Functions:** The design of reward functions to guide the learning process for specific tasks (e.g., obstacle avoidance, efficient locomotion).
+* **RL Algorithms Used:** The specific reinforcement learning algorithms implemented (e.g., Deep Q-Networks (DQN), Proximal Policy Optimization (PPO)).
+* **Integration with Sensor Data:** How sensor data (if any) is incorporated into the RL agent's decision-making process.
+* **Learned Behaviors:** Descriptions and demonstrations of the behaviors learned by the RL agent.
+* **Instructions for Running RL Experiments:** Steps to set up and run the reinforcement learning training and evaluation scripts.
 
-- The highest risk of failure is the mechanical design and printing. I do not have a lot of expertise in this area, so I allocated the most amount of time into this area.
+## License
 
-- The only area that I am a little unsure about is the different style walking gaits, but if the Inverse kinematics is implemented well enough, it shouldn't be hard to understand the gaits.
-
-- I plan to address the uncertainities by making many prototypes for my hexapod leg so I can fix the issues as fast as possible. I also plan to draw on knowledge of several Mechanical Engineering firends to help me with the design process. 
-
-## Tools and Reference
-
-#### Hardware
-
-- Dynamixel Servos or MG996R Servo 
-- Nvidia Jetson Orin Nano or Arduino Uno R4
-- 3d printed parts
-- Connecting Wires
-- U2D2 board (if using the Jetson)
-- PCA9685 (if using the Arduino)
-- Power Supply
-
-<div style="text-align: center;">
-<img src="media/arduino_uno_r4_wifi.jpg" width="200" height="200">
-<img src="media/jetson_orin_nano.jpg" width="200" height="200">
-</div>
-
-
-<div style="text-align: center;">
-<img src="media/mg996R_servo_datasheet.jpg" width="300" height="200">
-<img src="media/dynamixel_xl_430.jpg" width="300" height="150">
-</div>
-
-
-
-#### Software
-- VSCode
-- C++
-- Dynamixel SDK (Dynamixel)
-- Platform IO (Arduino)
-
-#### Reference Material
-- Hexapod Build and Code Tutorial (YouTube)
-https://www.youtube.com/@AecertRobotics
-
-- MSR student past project
-https://adityanairs.website/
-
-#### Packages
-
-- Servo Control
-https://github.com/adafruit/Adafruit_CircuitPython_PCA9685 (MG996R)
-https://github.com/ROBOTIS-GIT/DynamixelSDK (Dynamixel)
-
-- Inverse Kinematics - I plan to implement this myself to get a deeper understanding of how it works for this specific use case
+[Specify your license here, e.g., MIT License]
