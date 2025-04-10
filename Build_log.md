@@ -266,17 +266,20 @@ The robot stands! Everything is mounted onto the base and the run can run unteth
 
 However, when testing the walking, I noticed there was something wrong with the gait. I had accidentally programmed the turning gait instead. 
 
-TURNING VIDEO HERE
+![Turning1](https://github.com/user-attachments/assets/54235994-e868-42e8-8928-91541ae943e0)
+
 
 I thought it was an easy fix but instead of that, I had to dive into the mechanics of the legs to see how each one was moving in respect to its tripod. This took some time because I kepy having to reprogram and test. I did end up getting this dancing motion where the feet weren't moving at all. This was my favorite mistake Ive made.
 
-DANCE VIDEO
+![Uploading DANCE.gif…]()
+
 
 ### Week 8 
 
 Finally I have the hexapod moving!! My first goal is all but done. The hexapod returns to home every it takes a step, which is not ideal. It's not too big of a deal because the tripod gait works well. The robot moves in a straight line and looks good while doing it! 
 
-MOVING VIDEO
+![Tripod_example_short](https://github.com/user-attachments/assets/4613c453-170d-4409-8f91-8c828e82dfdf)
+
 
 I wanted a way to take the base off of the top without having to unscrew it everytime. I thought magnets could work well if mounted with standoffs, but after time "wasted" with this, I figured it would be best to move on to my stretch goal. 
 
@@ -286,7 +289,8 @@ I had tried multiple times before to export my URDF from onshape using a tool ca
 
 The Reinforcement Learning part of this project seems daunting, but luckily I was working on another project training the Unitree Go2 robot dog to perform different tasks. I used some code from the other project, added two new legs (both the hexapod and the dog have three joints per leg), and the training script was running! 
 
-RL VIDEO
+![hexapod_rl_short](https://github.com/user-attachments/assets/5cd3d814-59f4-4c74-9089-af690775fa50)
+
 
 Its walking! Currently its fairly slow, after getting it working, I needed to decide if I wanted to tune it to be perfect, or start working on the sim-to-real. I decided to pursue the sim-to-real option, although time was running out and I had many other deadlines to handle.
 
