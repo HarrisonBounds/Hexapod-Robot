@@ -126,3 +126,15 @@ $$
 \theta_3 &= \phi_3 - 90
 \end{align}
 $$
+
+---
+
+## Bezier Curve
+
+**Quadratic Bezier Curve (n=2):**
+Defined by three control points $P_0, P_1,$ and $P_2$.
+$$
+B(t) = (1-t)^2 P_0 + 2(1-t)t P_1 + t^2 P_2
+$$
+
+
