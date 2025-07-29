@@ -88,17 +88,41 @@ The `Leg` structure also defines the `home_positions` for each motor in each leg
 * **`returnToHome(...)`:** Moves all legs back to their defined home positions.
 * **`main()`:** The main function that initializes the system, enables torque, moves to the home position, and runs the control loop (including the commented-out menu).
 
-## Future Work (Reinforcement Learning Integration)
+---
 
-This section will be updated with details about the reinforcement learning work done to further enhance the robot's control and capabilities. Stay tuned for information on:
+## Inverse Kinematics
+$$
+\begin{align}
+y &\leftarrow y + Y_{REST} \\
+z &\leftarrow z + Z_{REST}
+\end{align}
+$$
 
-* **RL Environment Setup:** How the hexapod control problem is formulated as a reinforcement learning environment.
-* **Reward Functions:** The design of reward functions to guide the learning process for specific tasks (e.g., obstacle avoidance, efficient locomotion).
-* **RL Algorithms Used:** The specific reinforcement learning algorithms implemented (e.g., Deep Q-Networks (DQN), Proximal Policy Optimization (PPO)).
-* **Integration with Sensor Data:** How sensor data (if any) is incorporated into the RL agent's decision-making process.
-* **Learned Behaviors:** Descriptions and demonstrations of the behaviors learned by the RL agent.
-* **Instructions for Running RL Experiments:** Steps to set up and run the reinforcement learning training and evaluation scripts.
+$$
+\begin{align}
+\theta_1 &= \arctan\left(\frac{x}{y}\right) \cdot \frac{180}{\pi}
+\end{align}
+$$
 
-## License
+$$
+\begin{align}
+r_1 &= \sqrt{x^2 + y^2} - R_1 \\
+r_2 &= z \\
+d &= \sqrt{r_1^2 + r_2^2}
+\end{align}
+$$
 
-[Specify your license here, e.g., MIT License]
+$$
+\begin{align}
+\phi_1 &= \arctan\left(\frac{z}{r_1}\right) \cdot \frac{180}{\pi} \\
+\phi_2 &= \arccos\left(\frac{R_2^2 + d^2 - R_3^2}{2 \cdot R_2 \cdot d}\right) \cdot \frac{180}{\pi} \\
+\phi_3 &= \arccos\left(\frac{R_2^2 + R_3^2 - d^2}{2 \cdot R_2 \cdot R_3}\right) \cdot \frac{180}{\pi}
+\end{align}
+$$
+
+$$
+\begin{align}
+\theta_2 &= \phi_1 + \phi_2 \\
+\theta_3 &= \phi_3 - 90
+\end{align}
+$$
