@@ -1,6 +1,6 @@
 # Hexapod Robot Control
 
-This repository contains the C++ code for controlling a hexapod robot equipped with Dynamixel servomotors. The code implements inverse and forward kinematics, tripod gait for walking, turning maneuvers, and a waving motion. It utilizes the Dynamixel SDK for communication with the motors.
+This repository contains the C++ code for controlling a hexapod robot equipped with Dynamixel servomotors and Python code for training the same hexapod in a simulated environement. The code implements inverse and forward kinematics, tripod gait for walking, turning maneuvers, and a waving motion. It utilizes the Dynamixel SDK for communication with the motors.
 
 ## Features
 
@@ -15,12 +15,16 @@ This repository contains the C++ code for controlling a hexapod robot equipped w
 * **Interactive Menu (Commented Out):** Includes a commented-out interactive menu for controlling different actions (walk, turn, wave, home).
 * **Real-time Position Feedback:** Continuously reads and displays the current position of each leg.
 
+---
+
 ## Prerequisites
 
 * **Dynamixel SDK:** You need to have the Dynamixel SDK installed on your system. Follow the installation instructions provided in the official [ROBOTIS-MANIPULATOR-H](https://emanual.robotis.com/docs/en/software/dynamixel/dynamixel_sdk/overview/) documentation.
 * **Dynamixel Servomotors:** This code is designed for Dynamixel X-series servomotors. The `DXL_IDS` array in the code defines the IDs of the 18 motors used (3 per leg). Ensure your motors are properly connected.
 * **USB2DYNAMIXEL:** A USB to Dynamixel communication interface is required to connect your computer to the Dynamixel bus.
 * **Serial Port Permissions:** Ensure your user has the necessary permissions to access the serial port specified by `DEVICENAME` (e.g., `/dev/ttyUSB0` on Linux). You might need to add your user to the `dialout` group (Linux).
+
+---
 
 ## Hardware Configuration
 
@@ -34,6 +38,8 @@ The code assumes a hexapod robot with the following motor ID configuration:
 * **Leg 6:** Motors 16, 17, 18
 
 The `Leg` structure also defines the `home_positions` for each motor in each leg. These values should correspond to the robot's default standing or "home" configuration. You might need to adjust these values based on your robot's physical setup.
+
+---
 
 ## Software Setup
 
@@ -54,7 +60,7 @@ The `Leg` structure also defines the `home_positions` for each motor in each leg
     g++ -o hexapod main.cpp -I/path/to/dynamixel_sdk/include -L/path/to/dynamixel_sdk/lib -ldynamixel_sdk
     ```
     Replace `/path/to/dynamixel_sdk/include` and `/path/to/dynamixel_sdk/lib` with the actual paths to your Dynamixel SDK installation.
-
+---
 ## Usage
 
 1.  **Connect the Robot:** Ensure your hexapod robot is powered on and connected to your computer via the USB2DYNAMIXEL adapter.
@@ -68,25 +74,6 @@ The `Leg` structure also defines the `home_positions` for each motor in each leg
 
 4.  **Interactive Menu (Commented Out):** To enable the interactive menu, uncomment the `displayMenu()` call and the `switch` statement in the `main` function. You can then control the robot's actions by pressing the corresponding numbers and 'ESC' to exit.
 
-## Code Structure
-
-* **`main.cpp`:** Contains the main program logic, including initialization, control loop, and the commented-out interactive menu.
-* **Header Includes:** Includes necessary standard C/C++ libraries and the Dynamixel SDK header.
-* **Definitions:** Defines constants for control table addresses, baud rate, protocol version, device name, torque enable/disable values, and kinematic parameters.
-* **`Leg` Structure:** Defines a structure to hold motor IDs, home positions, and move positions for each leg.
-* **`getch()` and `kbhit()`:** Platform-specific functions for non-blocking keyboard input (used for the commented-out interactive menu).
-* **`IK(x, y, z, thetaList[])`:** Implements the inverse kinematics algorithm to calculate joint angles for a given end-effector position.
-* **`FK(theta1, theta2, theta3, position[])`:** Implements the forward kinematics algorithm to calculate the end-effector position for given joint angles.
-* **`getCurrentLegPosition(...)`:** Reads the current positions of the leg motors and calculates the current Cartesian position of each leg's end effector using forward kinematics.
-* **`bezierPoint(p0, p1, p2, t)`:** Calculates a point on a quadratic Bezier curve.
-* **`move(...)`:** Sends goal position commands to the specified motors using the Dynamixel GroupSyncWrite for synchronized movement.
-* **`calculatePosition(...)`:** Converts desired joint angles (from IK) into Dynamixel motor position values.
-* **`tripodGait(...)`:** Implements the tripod gait walking motion using Bezier curves for smooth transitions.
-* **`turning(...)`:** Implements the turning motion using coordinated leg movements and Bezier curves.
-* **`wave(...)`:** Implements a waving motion for one of the legs using Bezier curves.
-* **`displayMenu()`:** (Commented Out) Displays the interactive control menu.
-* **`returnToHome(...)`:** Moves all legs back to their defined home positions.
-* **`main()`:** The main function that initializes the system, enables torque, moves to the home position, and runs the control loop (including the commented-out menu).
 
 ---
 
@@ -126,5 +113,29 @@ $$
 \theta_3 &= \phi_3 - 90
 \end{align}
 $$
+
+---
+
+## Reinforcement Learning in Genesis
+
+"[Genesis](https://genesis-world.readthedocs.io/en/latest/) is a physics platform designed for general purpose Robotics/Embodied AI/Physical AI applications." 
+
+This hexapod traning adapts the provided genesis RL training for the Unitree go2 robot dog, and applies it to the hexapod. It uses [Proximal Policy Optimization](https://openai.com/index/openai-baselines-ppo/) (PPO) to perform the training. This algorithm is an Actor-Critic method that tries to maximize the future reward by applying actions from the actor to robot in the simualted environment.
+
+The gait comparison done in this project was a programmed tripod gait vs. a learned gait. The learned gait closely resembles a tripod movement for the hexapod, but with more tuning, this can be different for difference application (speed, stability, etc.)
+
+**To Train:**
+
+```
+cd hexapod_rl/
+python3 -m venv hex_venv
+source hex_venv/bin/activate
+pip install -r requirements.txt
+python3 hexapod_train.py
+python3 hexapod_eval.py
+```
+
+This will train in headless mode, and show the evaluation visualization at the end of training. This this is a simple locomotion policy, the training should not take more than 10 minutes.
+
 
 
