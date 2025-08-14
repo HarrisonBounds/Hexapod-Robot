@@ -45,8 +45,8 @@ The `Leg` structure also defines the `home_positions` for each motor in each leg
 
 1.  **Clone the Repository:**
     ```bash
-    git clone <repository_url>
-    cd <repository_directory>
+    git clone git@github.com:HarrisonBounds/Hexapod-Robot.git
+    cd Hexapod-Robot
     ```
 
 2.  **Install Dynamixel SDK (if not already installed):**
