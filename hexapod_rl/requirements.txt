@@ -4,3 +4,4 @@ pyyaml
 typeguard
 tensorboard
 onshape-to-robot
+rsl-rl-lib
